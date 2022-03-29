@@ -1,0 +1,54 @@
+package reconnaissancefacial;
+
+public class Vector {
+    double[] data;
+
+    public Vector(double[] data) {
+        this.data = data;
+    }
+
+    public Vector(int size) {
+        this.data = new double[size];
+    }
+
+    public int getLenght() {
+        return this.data.length;
+    }
+
+    public double get(int i) {
+        return this.data[i];
+    }
+
+    public void set(int i, double val) {
+        this.data[i] = val;
+    }
+
+    public void subtract(Vector vector) {
+        for (int i = 0; i < getLenght(); i++) {
+            this.set(i, this.get(i) - vector.get(i));
+        }
+    }
+
+
+    public Matrix toMatrix(int width) {
+        int height = this.getLenght() / width;
+        Matrix matrix = new Matrix(width, this.getLenght() / width);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                matrix.set(x,y,this.get(x * height + y));
+            }
+        }
+        return matrix;
+    }
+
+    @Override
+    public String toString() {
+        String str = "{";
+        for (int i = 0; i < this.getLenght(); i++) {
+            str += this.get(i);
+            if (i < this.getLenght()-1) str += ", ";
+        }
+        str += "}";
+        return str;
+    }
+}
