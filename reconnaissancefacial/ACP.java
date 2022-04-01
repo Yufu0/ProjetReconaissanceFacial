@@ -10,6 +10,7 @@ public class ACP {
     private Matrix covarianceMatrix;
     private double[] eigenValues;
     private Matrix matrixEigenVector;
+//    private HashMap<Double, Vector> michel;
 
 
     public ACP(Matrix matrixImage) {
@@ -38,30 +39,31 @@ public class ACP {
 
     public void compute() {
 
-        System.out.println("data : " + this.getMatrixVectorsImage());
+        System.out.println("data : "/* + this.getMatrixVectorsImage()*/);
         // calcule du vecteur moyen
         this.vectorMean = this.matrixVectorsImage.computeMean();
-        System.out.println("mean : " + this.getVectorMean());
+        System.out.println("mean : " /*+ this.getVectorMean()*/);
 
         // centrer les vecteurs
         this.matrixVectorsImage.subtractAll(this.vectorMean);
-        System.out.println("center : " + this.matrixVectorsImage);
+        System.out.println("center : " /*+ this.matrixVectorsImage*/);
 
         // calcule de la matrice de covariance
         this.computeCovarianceMatrix();
-        System.out.println("cov : " + this.getCovarianceMatrix());
+        System.out.println("cov : " /*+ this.getCovarianceMatrix()*/);
 
 
         // calcule des valeurs propres
 
         // necessite de transformer la matrice de cov en 'Array2DRowRealMatrix' pour utiliser eigenDecomposition
+
         EigenDecomposition eigenDecomposition = new EigenDecomposition(this.covarianceMatrix.toArray2DRowRealMatrix());
         this.eigenValues = eigenDecomposition.getRealEigenvalues();
-        System.out.println("eigenvalues : " + Arrays.toString(this.eigenValues));
+        System.out.println("eigenvalues oof j'ai mal " /* + Arrays.toString(this.eigenValues)*/);
 
         // calcule des vecteurs propres
         this.matrixEigenVector = new Matrix(eigenDecomposition.getV().getData());
-        System.out.println("eigenfaces : " + this.getMatrixEigenVector());
+        System.out.println("eigenfaces de t'es morts : " /* + this.getMatrixEigenVector()*/);
 
         double sum = 0.0;
         for (int i = 0; i < this.eigenValues.length; i++) {
@@ -69,13 +71,6 @@ public class ACP {
         }
 
         System.out.println(sum);
-        System.out.println(eigenDecomposition.getDeterminant());
-
-
-
-
-
-
     }
 
     private void computeEigenValues() {

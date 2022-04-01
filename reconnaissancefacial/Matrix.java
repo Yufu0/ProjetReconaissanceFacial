@@ -124,7 +124,7 @@ public class Matrix {
         String str = "[";
         for (int x = 0; x < this.getWidth(); x++) {
             str += this.getVector(x).toString();
-            if (x < this.getWidth()-1) str += ", ";
+            if (x < this.getWidth()-1) str += ",\n";
         }
         str += "]";
         return str;
