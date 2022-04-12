@@ -13,6 +13,9 @@ public class Matrix {
         this.data = new Vector[width];
         for (int x = 0; x < width; x++) {
             this.data[x] = new Vector(height);
+            for (int y = 0; y < height; y++) {
+                this.data[x].set(y, 0.0);
+            }
         }
     }
 
@@ -113,6 +116,27 @@ public class Matrix {
         return productMatrix;
     }
 
+    public Matrix add(Matrix matrix) {
+        if (this.getWidth() != matrix.getWidth() || this.getHeight() != matrix.getHeight()) return null;
+
+        Matrix sumMatrix = new Matrix(this.getWidth(), this.getHeight());
+        for (int x = 0; x < this.getWidth(); x++) {
+            for (int y = 0; y < this.getHeight(); y++) {
+                sumMatrix.set(x, y, this.get(x,y) + matrix.get(x,y));
+            }
+        }
+        return sumMatrix;
+    }
+
+    public Matrix multiplyByConstant(double cste) {
+        Matrix productMatrix = new Matrix(this.getWidth(), this.getHeight());
+        for (int x = 0; x < this.getWidth(); x++) {
+            for (int y = 0; y < this.getHeight(); y++) {
+                productMatrix.set(x, y, this.get(x,y) * cste);
+            }
+        }
+        return productMatrix;
+    }
     public Array2DRowRealMatrix toArray2DRowRealMatrix() {
         double[][] table = new double[this.getWidth()][this.getHeight()];
         for (int x = 0; x < this.getWidth(); x++) {
@@ -143,5 +167,16 @@ public class Matrix {
 
     public Vector[] getVectors() {
         return this.data;
+    }
+
+
+    public double compareTo(Matrix matrix) {
+        double distance = 0.0;
+        for (int x = 0; x < this.getWidth(); x++) {
+            for (int y = 0; y < this.getHeight(); y++) {
+                distance += Math.pow(this.get(x,y)-matrix.get(x,y), 2);
+            }
+        }
+        return Math.sqrt(distance);
     }
 }

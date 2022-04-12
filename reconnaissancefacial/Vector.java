@@ -59,7 +59,7 @@ public class Vector {
         }
     }
 
-    private double getNorm() {
+    public double getNorm() {
         double norm = 0.0;
         for (int i = 0; i < this.getLenght(); i++) {
             norm += this.get(i)*this.get(i);

@@ -100,4 +100,18 @@ public class ImageProcessing {
 
         return m;
     }
+
+    public static void saveResult(Matrix matrix, String fileName) throws IOException {
+        BufferedImage image = new BufferedImage(matrix.getWidth(), matrix.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = image.getRaster();
+        double[] arrayDouble;
+        for (int i = 0; i < matrix.getWidth(); i++) {
+            for (int j = 0; j < matrix.getHeight(); j++) {
+                arrayDouble = new double[]{matrix.get(i, j)};
+                raster.setPixel(j, i, arrayDouble);
+            }
+        }
+
+        ImageIO.write(image, "PNG", new File(fileName));
+    }
 }

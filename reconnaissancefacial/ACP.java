@@ -30,17 +30,13 @@ public class ACP {
     public Vector getVectorMean() {
         return vectorMean;
     }
-    public void compute() {
+    private void compute() {
 
         // calcule du vecteur moyen
         this.vectorMean = this.matrixVectorsImage.computeMean();
 
         // centrer les vecteurs
         this.matrixVectorsImage.subtractAll(this.vectorMean);
-
-        for (Vector vector : this.matrixVectorsImage.getVectors()) {
-            vector.normalise();
-        }
 
         // calcule des valeurs propres
 
@@ -52,12 +48,12 @@ public class ACP {
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
             double value = eigenDecomposition.getRealEigenvalue(i);
 
-            if (Math.abs(value) > 1) {
-                System.out.println(value);
+            if (i < 12) {
                 Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
                 vector.normalise();
                 this.getEigenVectors().put(value, vector);
             }
+
         }
     }
 }
