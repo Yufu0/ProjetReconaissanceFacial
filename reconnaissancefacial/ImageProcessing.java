@@ -19,6 +19,7 @@ public class ImageProcessing {
         int width = img.getWidth(null);
         int height = img.getHeight(null);
 
+
         this.imageTableau = new int[width][height][3];
 
         Raster tramPixelsImg = img.getRaster();

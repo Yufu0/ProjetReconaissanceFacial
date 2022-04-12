@@ -51,4 +51,19 @@ public class Vector {
         str += "}";
         return str;
     }
+
+    public void normalise() {
+        double norm = this.getNorm();
+        for (int i = 0; i < this.getLenght(); i++) {
+            this.set(i, this.get(i)/norm);
+        }
+    }
+
+    private double getNorm() {
+        double norm = 0.0;
+        for (int i = 0; i < this.getLenght(); i++) {
+            norm += this.get(i)*this.get(i);
+        }
+        return Math.sqrt(norm);
+    }
 }

@@ -25,6 +25,15 @@ public class Matrix {
         }
     }
 
+    public Matrix(Matrix matrix) {
+        this(matrix.getWidth(), matrix.getHeight());
+        for (int x = 0; x < matrix.getWidth(); x++) {
+            for (int y = 0; y < matrix.getHeight(); y++) {
+                this.set(x,y,matrix.get(x,y));
+            }
+        }
+    }
+
     public int getWidth() {
         return this.data.length;
     }
@@ -87,14 +96,16 @@ public class Matrix {
         return transposeMatrix;
     }
 
-    public Matrix multiply(Matrix transposeMatrix) {
-        Matrix productMatrix = new Matrix(transposeMatrix.getWidth(), this.getHeight());
+    public Matrix multiply(Matrix matrix) {
+        if (this.getWidth() != matrix.getHeight()) return null;
+
+        Matrix productMatrix = new Matrix(matrix.getWidth(), this.getHeight());
         double sum;
-        for (int x = 0; x < transposeMatrix.getWidth(); x++) {
+        for (int x = 0; x < matrix.getWidth(); x++) {
             for (int y = 0; y < this.getHeight(); y++) {
                 sum = 0.0;
                 for (int z = 0; z < this.getWidth() ; z++) {
-                    sum += this.get(z,y) * transposeMatrix.get(x,z);
+                    sum += this.get(z,y) * matrix.get(x,z);
                 }
                 productMatrix.set(x, y, sum);
             }
@@ -114,7 +125,7 @@ public class Matrix {
 
     public Vector projectVector(Vector vector) {
         Matrix vectorMatrix = vector.toMatrix(1);
-        Matrix projection = this.multiply(vectorMatrix);
+        Matrix projection = vectorMatrix.transpose().multiply(this);
         return projection.toVector();
     }
 
@@ -128,5 +139,9 @@ public class Matrix {
         }
         str += "]";
         return str;
+    }
+
+    public Vector[] getVectors() {
+        return this.data;
     }
 }
