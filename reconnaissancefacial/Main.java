@@ -4,6 +4,9 @@ package reconnaissancefacial;
 import java.io.IOException;
 
 public class Main {
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 300;
+    public static final int EPSILON = 10;
     public static void main(String[] args) throws IOException {
 
         ImageProcessing eee0 = new ImageProcessing("img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_0.jpg");
@@ -80,10 +83,10 @@ public class Main {
 
         Matrix matrix = new Matrix(1000,1000);
         System.out.println(matrix.compareTo(eee11.toMatrix()));
-        //matrix = matrix.add(acp.getVectorMean().toMatrix(1000));
+        matrix = matrix.add(acp.getVectorMean().toMatrix(1000));
         System.out.println(matrix.compareTo(eee11.toMatrix()));
-        for (int i = 0; i < 1; i++) {
-            matrix = matrix.add(acp.getEigenMatrix().getVectors()[i].toMatrix(1000).multiplyByConstant(10000));
+        for (int i = 0; i < 12; i++) {
+            matrix = matrix.add(acp.getEigenMatrix().getVectors()[i].toMatrix(1000).multiplyByConstant(v2[11].get(i)));
             System.out.println(matrix.compareTo(eee11.toMatrix()));
         }
         ImageProcessing.saveResult(matrix, "resultat.png");

@@ -66,4 +66,12 @@ public class Vector {
         }
         return Math.sqrt(norm);
     }
+
+    public double compareTo(Vector vector) {
+        double distance = 0.0;
+        for (int i = 0; i < this.getLenght(); i++) {
+                distance += Math.pow(this.get(i)-vector.get(i), 2);
+        }
+        return Math.sqrt(distance);
+    }
 }
