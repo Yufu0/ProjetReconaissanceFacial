@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class FaceRecognition {
-    public FaceRecognition(String imageSrc) throws IOException {
+    public static void recognition(String imageSrc) throws IOException {
         /* ouverture de l'image et modification au format souhaité */
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc);
         faceToRecognize.toBlackAndWhite();
