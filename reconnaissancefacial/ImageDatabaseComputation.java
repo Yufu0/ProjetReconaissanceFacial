@@ -5,8 +5,11 @@ import java.util.HashMap;
 
 public class ImageDatabaseComputation {
     public static void compute() throws IOException {
+
+        MySQL mysql = MySQL.getInstance();
+
         /* recuperation des images depuis la bdd {idImage => source} */
-        HashMap<Integer, String> images = MySQL.getImages();
+        HashMap<Integer, String> images = mysql.getImages();
 
         /* convertion des images en un vecteurs */
         Vector[] vectorsImages = new Vector[images.size()];
@@ -21,10 +24,12 @@ public class ImageDatabaseComputation {
         ACP acp = new ACP(matrixImages);
 
         /* stockage des eigenfaces dans la bdd */
-        MySQL.saveEigenfaces(acp.getEigenMatrix());
+        for(double val:acp.getEigenVectors().keySet()) {
+            mysql.addEigenface(acp.getEigenVectors().get(val),val);
+        }
 
         /* stockage du visage moyen dans la bdd */
-        MySQL.saveFaceMean(acp.getVectorMean());
+        // mysql.saveFaceMean(acp.getVectorMean());
 
         /* on projettent tous les vecteurs sur l'espace des eigenfaces */
         HashMap<Integer, Vector> vectorsImagesProjected = new HashMap<>();
@@ -35,6 +40,8 @@ public class ImageDatabaseComputation {
         }
 
         /* on stock les projections des vecteurs dans la bdd (on clear aussi ceux précédamant calculé) */
-        MySQL.saveProjectedVectors(vectorsImagesProjected);
+        for(int id:vectorsImagesProjected.keySet()) {
+            mysql.addProjectedFace(vectorsImagesProjected.get(id),id);
+        }
     }
 }

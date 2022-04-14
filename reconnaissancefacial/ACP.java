@@ -37,23 +37,20 @@ public class ACP {
 
         // centrer les vecteurs
         this.matrixVectorsImage.subtractAll(this.vectorMean);
-
         // calcule des valeurs propres
+
 
         // necessite de transformer la matrice de cov en 'Array2DRowRealMatrix' pour utiliser la classe EigenDecomposition
         Matrix matrixA = this.getMatrixVectorsImage().transpose().multiply(this.getMatrixVectorsImage());
         EigenDecomposition eigenDecomposition = new EigenDecomposition(matrixA.toArray2DRowRealMatrix());
 
+
         // on stock les valeurs et vecteurs dans une map
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
             double value = eigenDecomposition.getRealEigenvalue(i);
-
-            if (i < 12) {
-                Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
-                vector.normalise();
-                this.getEigenVectors().put(value, vector);
-            }
-
+            Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
+            vector.normalise();
+            this.getEigenVectors().put(value, vector);
         }
     }
 }

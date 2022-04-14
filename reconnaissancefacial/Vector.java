@@ -1,7 +1,7 @@
 package reconnaissancefacial;
 
 public class Vector {
-    double[] data;
+    private double[] data;
 
     public Vector(double[] data) {
         this.data = data;
@@ -17,6 +17,10 @@ public class Vector {
 
     public double get(int i) {
         return this.data[i];
+    }
+
+    public double[] getData() {
+        return this.data;
     }
 
     public void set(int i, double val) {

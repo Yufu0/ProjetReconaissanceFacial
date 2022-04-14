@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class FaceRecognition {
-    public static void recognition(String imageSrc) throws IOException {
-        
-        MySQL mysql = MySQL.getInstance();
-        
+    public FaceRecognition(String imageSrc) throws IOException {
         /* ouverture de l'image et modification au format souhaité */
+
+        MySQL mysql = MySQL.getInstance();
+
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc);
         faceToRecognize.toBlackAndWhite();
         faceToRecognize.resize(Main.WIDTH, Main.HEIGHT);

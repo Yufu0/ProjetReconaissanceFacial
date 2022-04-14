@@ -104,14 +104,19 @@ public class ImageProcessing {
     public static void saveResult(Matrix matrix, String fileName) throws IOException {
         BufferedImage image = new BufferedImage(matrix.getWidth(), matrix.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
         WritableRaster raster = image.getRaster();
-        double[] arrayDouble;
+        int[] arrayDouble;
         for (int i = 0; i < matrix.getWidth(); i++) {
             for (int j = 0; j < matrix.getHeight(); j++) {
-                arrayDouble = new double[]{matrix.get(i, j)};
+                if(matrix.get(i, j) > 255) {
+                    arrayDouble = new int[]{255};
+                } else if (matrix.get(i, j) < 0){
+                    arrayDouble = new int[]{0};
+                } else {
+                    arrayDouble = new int[]{(int)matrix.get(i, j)};
+                }
                 raster.setPixel(j, i, arrayDouble);
             }
         }
-
         ImageIO.write(image, "PNG", new File(fileName));
     }
 }
