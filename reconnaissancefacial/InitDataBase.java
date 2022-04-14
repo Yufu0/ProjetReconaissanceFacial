@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class InitDataBase {
-    public static void init() throws IOException {
+    public void init() throws IOException {
         
         String src = "img/Base_Images_Apprentissage";
         File file = new File(src);
