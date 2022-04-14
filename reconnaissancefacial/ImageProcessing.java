@@ -101,6 +101,6 @@ public class ImageProcessing {
                 raster.setPixel(i, j, arrayInt);
             }
         }
-        ImageIO.write(image, "PNG", new File(source));
+        ImageIO.write(image, "jpg", new File(source));
     }
 }

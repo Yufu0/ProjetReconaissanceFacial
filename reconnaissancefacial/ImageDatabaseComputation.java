@@ -12,10 +12,13 @@ public class ImageDatabaseComputation {
         HashMap<Integer, String> images = mysql.getImages();
 
         /* convertion des images en un vecteurs */
+        int i = 0;
         Vector[] vectorsImages = new Vector[images.size()];
-        for (int i = 0; i < images.size(); i++) {
-            vectorsImages[i] = (new ImageProcessing((String) images.entrySet().toArray()[i]).toMatrix().toVector());
+        for (int id : images.keySet()) {
+            vectorsImages[i] = (new ImageProcessing(images.get(id))).toMatrix().toVector();
+            i++;
         }
+        
 
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);

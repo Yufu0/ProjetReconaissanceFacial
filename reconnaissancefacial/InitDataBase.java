@@ -69,7 +69,7 @@ public class InitDataBase {
         img.resize(Main.WIDTH,Main.HEIGHT);
         img.save("img/DataBaseImage/" + name);
 
-        //MySQL mysql = MySQL.getInstance();
-        //mysql.addImage(nom, prenom, source);
+        MySQL mysql = MySQL.getInstance();
+        mysql.addImage(nom, prenom, source);
     }
 }

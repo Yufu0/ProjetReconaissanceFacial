@@ -1,17 +1,11 @@
 package reconnaissancefacial;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class MySQL {
 
-    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","root","");
+    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","celio","celio");
 
     private final String urlBase;
     private final String host;
