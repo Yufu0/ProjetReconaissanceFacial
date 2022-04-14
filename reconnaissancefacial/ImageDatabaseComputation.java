@@ -19,15 +19,15 @@ public class ImageDatabaseComputation {
             i++;
         }
 
-
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);
+
 
         /* calcule de l'ACP sur cette matrice */
         ACP acp = new ACP(matrixImages);
 
         /* stockage des eigenfaces dans la bdd */
-        for(double val:acp.getEigenVectors().keySet()) {
+        for(double val : acp.getEigenVectors().keySet()) {
             mysql.addEigenface(acp.getEigenVectors().get(val),val);
         }
 

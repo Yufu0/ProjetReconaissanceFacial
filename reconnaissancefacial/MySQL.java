@@ -205,26 +205,23 @@ public class MySQL {
 
     public void addEigenface(Vector eigenface, double valPropre) {
         try {
-            int index;
-            // Récupération de l'auto incrément de l'eigenface
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'rf' AND TABLE_NAME = 'eigenface'");
-            ResultSet rs = preparedStatement.executeQuery();
-            if(rs.next()) index = rs.getInt(1);
-            else throw new SQLException("Erreur récupération auto incrément");
+
 
             // Création de l'eigenface
-            preparedStatement = connection.prepareStatement("INSERT INTO eigenface (valPropre) VALUES (?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO eigenface (valPropre) VALUES (?)");
             preparedStatement.setDouble(1, valPropre);
             preparedStatement.execute();
+
+            System.out.println("yep");
 
 
             // Ajout des valeurs avec comme clef étrangère l'auto incrément précédement récupéré
             for (double val: eigenface.getData()) {
-                preparedStatement = connection.prepareStatement("INSERT INTO valeur (index_,idEigenface) VALUES (?,?)");
+                preparedStatement = connection.prepareStatement("INSERT INTO valeur (index_,idEigenface) VALUES (?, LAST_INSERT_ID())");
                 preparedStatement.setDouble(1, val);
-                preparedStatement.setInt(2, index);
                 preparedStatement.execute();
             }
+            System.out.println("eeeeuh");
             preparedStatement.close();
 
         } catch (SQLException e) {
