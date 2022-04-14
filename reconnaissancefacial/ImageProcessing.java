@@ -1,13 +1,11 @@
 package reconnaissancefacial;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ImageProcessing {
 
@@ -29,16 +27,6 @@ public class ImageProcessing {
             for (int j = 0; j < height; j++) {
                 rgb = tramPixelsImg.getPixel(i, j, (int[]) null);
                 this.imageTableau[i][j] = new int[] {rgb[0], rgb[1], rgb[2]};
-            }
-        }
-    }
-
-    public void afficher() {
-        for (int[][] a : this.imageTableau) {
-            System.out.print("\n");
-            for (int[] b : a) {
-                if(b.length == 3) System.out.print(b[0] + ";" + b[1] + ";" + b[2] + " ");
-                if(b.length == 1) System.out.print(b[0] + " ");
             }
         }
     }
@@ -101,22 +89,18 @@ public class ImageProcessing {
         return m;
     }
 
-    public static void saveResult(Matrix matrix, String fileName) throws IOException {
-        BufferedImage image = new BufferedImage(matrix.getWidth(), matrix.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+    public void save(String source) throws IOException {
+        BufferedImage image = new BufferedImage(this.imageTableau.length, this.imageTableau[0].length, BufferedImage.TYPE_BYTE_GRAY);
         WritableRaster raster = image.getRaster();
-        int[] arrayDouble;
-        for (int i = 0; i < matrix.getWidth(); i++) {
-            for (int j = 0; j < matrix.getHeight(); j++) {
-                if(matrix.get(i, j) > 255) {
-                    arrayDouble = new int[]{255};
-                } else if (matrix.get(i, j) < 0){
-                    arrayDouble = new int[]{0};
-                } else {
-                    arrayDouble = new int[]{(int)matrix.get(i, j)};
-                }
-                raster.setPixel(j, i, arrayDouble);
+        int[] arrayInt;
+        for (int i = 0; i < this.imageTableau.length; i++) {
+            for (int j = 0; j < this.imageTableau[0].length; j++) {
+                arrayInt = new int[]{this.imageTableau[i][j][0]};
+                if(this.imageTableau[i][j][0] > 255) arrayInt = new int[]{255};
+                if (this.imageTableau[i][j][0] < 0) arrayInt = new int[]{0};
+                raster.setPixel(i, j, arrayInt);
             }
         }
-        ImageIO.write(image, "PNG", new File(fileName));
+        ImageIO.write(image, "PNG", new File(source));
     }
 }
