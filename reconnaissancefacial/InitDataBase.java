@@ -32,6 +32,6 @@ public class InitDataBase {
         img.save("img/DataBaseImage/" + name);
 
         MySQL mysql = MySQL.getInstance();
-        mysql.addImage(nom, prenom, source);
+        mysql.addImage(nom, prenom, "img/DataBaseImage/" + name);
     }
 }
