@@ -17,13 +17,13 @@ public class InitDataBase {
             prenom = str.split("_")[0];
             File file2 = new File(src + "/" +str);
             for(String image : file2.list()) {
-                InitDataBase.addImageToDataBase(nom, prenom, src + "/" + str + "/"+image);
+                addImageToDataBase(nom, prenom, src + "/" + str + "/"+image);
             }
         }
     }
 
 
-    public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
+    public void addImageToDataBase(String nom, String prenom, String source) throws IOException {
 
         String name = new File(source).getName();
         ImageProcessing img = new ImageProcessing(source, "COULEUR");
