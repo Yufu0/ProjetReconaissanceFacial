@@ -15,10 +15,10 @@ public class ImageDatabaseComputation {
         int i = 0;
         Vector[] vectorsImages = new Vector[images.size()];
         for (int id : images.keySet()) {
-            vectorsImages[i] = (new ImageProcessing(images.get(id))).toMatrix().toVector();
+            vectorsImages[i] = (new ImageProcessing(images.get(id), "N&B")).toMatrix().toVector();
             i++;
         }
-        
+
 
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);
@@ -37,7 +37,7 @@ public class ImageDatabaseComputation {
         /* on projettent tous les vecteurs sur l'espace des eigenfaces */
         HashMap<Integer, Vector> vectorsImagesProjected = new HashMap<>();
         for (int idImage : images.keySet()) {
-            Vector vector = (new ImageProcessing(images.get(idImage)).toMatrix().toVector());
+            Vector vector = (new ImageProcessing(images.get(idImage), "N&B").toMatrix().toVector());
             Vector vectorProjected = acp.getEigenMatrix().projectVector(vector);
             vectorsImagesProjected.put(idImage, vectorProjected);
         }

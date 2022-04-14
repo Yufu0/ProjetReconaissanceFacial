@@ -17,7 +17,10 @@ public class Main {
 
 
 
-        InitDataBase.init();
+        //InitDataBase.init();
+
+        System.out.println("fin");
+        ImageDatabaseComputation.compute();
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Veuillez saisir un le visage :");

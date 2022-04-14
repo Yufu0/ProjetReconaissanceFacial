@@ -9,7 +9,7 @@ public class FaceRecognition {
 
         MySQL mysql = MySQL.getInstance();
 
-        ImageProcessing faceToRecognize = new ImageProcessing(imageSrc);
+        ImageProcessing faceToRecognize = new ImageProcessing(imageSrc, "COULEUR");
         faceToRecognize.toBlackAndWhite();
         faceToRecognize.resize(Main.WIDTH, Main.HEIGHT);
         /* convertion de l'image en un vecteur */

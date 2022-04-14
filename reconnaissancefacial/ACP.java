@@ -18,6 +18,7 @@ public class ACP {
         this.eigenVectors = new HashMap<>();
         this.compute();
     }
+
     public Matrix getEigenMatrix() {
         return new Matrix(Stream.of(this.getEigenVectors().values().toArray()).toArray(Vector[]::new));
     }

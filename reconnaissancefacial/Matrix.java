@@ -69,6 +69,7 @@ public class Matrix {
 
     /* calcule du vecteur image moyen */
     public Vector computeMean() {
+        System.out.println(getWidth() + " : " + getHeight());
         Vector vectorMean =  new Vector(this.getHeight());
         double sum;
         for (int y = 0; y < this.getHeight(); y++) {

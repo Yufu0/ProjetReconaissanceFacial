@@ -11,22 +11,40 @@ public class ImageProcessing {
 
     private int[][][] imageTableau;
 
-    public ImageProcessing(String source) throws IOException {
+    public ImageProcessing(String source, String type) throws IOException {
+        if (type == "COULEUR") {
+            BufferedImage img = ImageIO.read(new File(source));
+            int width = img.getWidth(null);
+            int height = img.getHeight(null);
 
-        BufferedImage img = ImageIO.read(new File(source));
-        int width = img.getWidth(null);
-        int height = img.getHeight(null);
+
+            this.imageTableau = new int[width][height][3];
+
+            Raster tramPixelsImg = img.getRaster();
+
+            int[] rgb;
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    rgb = tramPixelsImg.getPixel(i, j, (int[]) null);
+                    this.imageTableau[i][j] = new int[] {rgb[0], rgb[1], rgb[2]};
+                }
+            }
+        } else if (type == "N&B") {
+            BufferedImage img = ImageIO.read(new File(source));
+            int width = img.getWidth(null);
+            int height = img.getHeight(null);
 
 
-        this.imageTableau = new int[width][height][3];
+            this.imageTableau = new int[width][height][1];
 
-        Raster tramPixelsImg = img.getRaster();
+            Raster tramPixelsImg = img.getRaster();
 
-        int[] rgb;
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                rgb = tramPixelsImg.getPixel(i, j, (int[]) null);
-                this.imageTableau[i][j] = new int[] {rgb[0], rgb[1], rgb[2]};
+            int[] a;
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    a = tramPixelsImg.getPixel(i, j, (int[]) null);
+                    this.imageTableau[i][j] = new int[] {a[0]};
+                }
             }
         }
     }

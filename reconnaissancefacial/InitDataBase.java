@@ -56,15 +56,14 @@ public class InitDataBase {
         InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_5.jpg");
         InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_6.jpg");
 
-        System.out.println("fin");
-        ImageDatabaseComputation.compute();
+
     }
 
 
     public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
 
         String name = new File(source).getName();
-        ImageProcessing img = new ImageProcessing(source);
+        ImageProcessing img = new ImageProcessing(source, "COULEUR");
         img.toBlackAndWhite();
         img.resize(Main.WIDTH,Main.HEIGHT);
         img.save("img/DataBaseImage/" + name);
