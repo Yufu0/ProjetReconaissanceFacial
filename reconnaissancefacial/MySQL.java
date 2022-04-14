@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class MySQL {
 
-    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","celio","celio");
+    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","root","");
 
     private final String urlBase;
     private final String host;
@@ -27,46 +27,46 @@ public class MySQL {
         if (!isOnline()) {
             try {
                 connection = DriverManager.getConnection(this.urlBase + this.host  + "/" + this.database, this.userName, this.password);
-                Statement s = connection.createStatement();
+                Statement preparedStatement = connection.createStatement();
                 String createTablePersonne = "CREATE TABLE IF NOT EXISTS personne (" +
                         "idPersonne INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "nom varchar(255) not NULL," +
                         "prenom varchar(255) not NULL);";
-                s.executeUpdate(createTablePersonne);
+                preparedStatement.executeUpdate(createTablePersonne);
 
                 String createTableImage = "CREATE TABLE IF NOT EXISTS image (" +
                         "idImage INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "src varchar(255) not NULL," +
                         "idPersonne INTEGER not NULL," +
                         "CONSTRAINT fk_personne FOREIGN KEY (idPersonne) REFERENCES personne(idPersonne));";
-                s.executeUpdate(createTableImage);
+                preparedStatement.executeUpdate(createTableImage);
 
                 String createTableEigenface = "CREATE TABLE IF NOT EXISTS eigenface (" +
                         "idEigenface INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "valPropre DOUBLE);";
-                s.executeUpdate(createTableEigenface);
+                preparedStatement.executeUpdate(createTableEigenface);
 
                 String createTableValeur = "CREATE TABLE IF NOT EXISTS valeur (" +
                         "idValeur INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "index_ DOUBLE not NULL, " +
                         "idEigenface INTEGER not NULL," +
                         "CONSTRAINT fk_eigenface FOREIGN KEY (idEigenface) REFERENCES eigenface(idEigenface));";
-                s.executeUpdate(createTableValeur);
+                preparedStatement.executeUpdate(createTableValeur);
 
                 String createTableProjection = "CREATE TABLE IF NOT EXISTS projection (" +
                         "idProjection INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "idImage INTEGER not NULL," +
                         "CONSTRAINT fk_image FOREIGN KEY (idImage) REFERENCES image(idImage));";
-                s.executeUpdate(createTableProjection);
+                preparedStatement.executeUpdate(createTableProjection);
 
                 String createTableValeur2 = "CREATE TABLE IF NOT EXISTS valeur2 (" +
                         "idValeur INTEGER AUTO_INCREMENT PRIMARY KEY," +
                         "index_ DOUBLE not NULL, " +
                         "idProjection INTEGER not NULL," +
                         "CONSTRAINT fk_projection FOREIGN KEY (idProjection) REFERENCES projection(idProjection));";
-                s.executeUpdate(createTableValeur2);
+                preparedStatement.executeUpdate(createTableValeur2);
 
-                s.close();
+                preparedStatement.close();
                 System.out.println("[MySQL] Connexion effectuée.");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -119,6 +119,7 @@ public class MySQL {
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) m = new Matrix(rs.getInt(1), Main.WIDTH * Main.HEIGHT);
             else throw new SQLException("Erreur récupération nombre d'eigenfaces");
+            preparedStatement.close();
 
             preparedStatement = connection.prepareStatement("SELECT index_,idEigenface FROM valeur ORDER BY idEigenface;");
             rs = preparedStatement.executeQuery();
@@ -142,6 +143,7 @@ public class MySQL {
                     }
                 }
                 m.getVectors()[j] = v;
+                preparedStatement.close();
                 return m;
             }
         } catch (SQLException e) {
@@ -152,8 +154,8 @@ public class MySQL {
 
     public HashMap<Integer, Vector> getProjectedFaces() {
         try {
-            int current;
-            int i;
+            Integer current = null;
+            int i = 0;
             int lengt;
             HashMap<Integer, Vector> map = new HashMap<>();
 
@@ -161,29 +163,28 @@ public class MySQL {
             ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) lengt = rs.getInt(1);
             else throw new SQLException("Erreur récupération nombre d'eigenfaces");
+            preparedStatement.close();
 
-            preparedStatement = connection.prepareStatement("SELECT index_,idEigenface FROM valeur ORDER BY idEigenface;");
+            preparedStatement = connection.prepareStatement("SELECT index_,idProjection FROM valeur2 ORDER BY idProjection;");
             rs = preparedStatement.executeQuery();
-            if(rs.next()) {
-                i=0;
-                current = rs.getInt(2);
-                Vector v = new Vector(lengt);
-                v.set(i,rs.getDouble(1));
-                while(rs.next()) {
+
+            Vector v = new Vector(lengt);
+            while(rs.next()){
+                if(current == null) current=rs.getInt(2);
+                if (current==rs.getInt(2)) {
+                    v.set(i, rs.getDouble(1));
                     i++;
-                    if (current==rs.getInt(2)) {
-                        v.set(i, rs.getDouble(1));
-                    }
-                    else {
-                        map.put(current, v);
-                        v = new Vector(lengt);
-                        i = -1;
-                        current=rs.getInt(2);
-                    }
+                } else {
+                    map.put(current, v);
+                    v = new Vector(lengt);
+                    i = 0;
+                    current=rs.getInt(2);
                 }
-                map.put(current, v);
-                return map;
             }
+            preparedStatement.close();
+            map.put(current, v);
+            return map;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -206,24 +207,30 @@ public class MySQL {
     public void addEigenface(Vector eigenface, double valPropre) {
         try {
 
-
+            int index;
+            System.out.println("Le programme est pas mort");
             // Création de l'eigenface
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO eigenface (valPropre) VALUES (?)");
             preparedStatement.setDouble(1, valPropre);
             preparedStatement.execute();
+            preparedStatement.close();
 
-            System.out.println("yep");
+
+            preparedStatement= connection.prepareStatement("SELECT LAST_INSERT_ID() LIMIT 1");
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) index = rs.getInt(1);
+            else throw new SQLException("Erreur récupération index auto incrément");
+            preparedStatement.close();
 
 
             // Ajout des valeurs avec comme clef étrangère l'auto incrément précédement récupéré
             for (double val: eigenface.getData()) {
-                preparedStatement = connection.prepareStatement("INSERT INTO valeur (index_,idEigenface) VALUES (?, LAST_INSERT_ID())");
+                preparedStatement = connection.prepareStatement("INSERT INTO valeur (index_,idEigenface) VALUES (?,?)");
                 preparedStatement.setDouble(1, val);
+                preparedStatement.setInt(2, index);
                 preparedStatement.execute();
+                preparedStatement.close();
             }
-            System.out.println("eeeeuh");
-            preparedStatement.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -281,26 +288,26 @@ public class MySQL {
     public void addProjectedFace(Vector projection, int id) {
         try {
             int index;
-            // Récupération de l'auto incrément de l'eigenface
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'rf' AND TABLE_NAME = 'projection'");
-            ResultSet rs = preparedStatement.executeQuery();
-            if(rs.next()) index = rs.getInt(1);
-            else throw new SQLException("Erreur récupération auto incrément");
-
             // Création de la projection
-            preparedStatement = connection.prepareStatement("INSERT INTO projection (idImage) VALUES (?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO projection (idImage) VALUES (?)");
             preparedStatement.setDouble(1, id);
             preparedStatement.execute();
+            preparedStatement.close();
 
+            preparedStatement= connection.prepareStatement("SELECT LAST_INSERT_ID() LIMIT 1");
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) index = rs.getInt(1);
+            else throw new SQLException("Erreur récupération index auto incrément");
+            preparedStatement.close();
 
             // Ajout des valeurs avec comme clef étrangère l'auto incrément précédement récupéré
             for (double val: projection.getData()) {
-                preparedStatement = connection.prepareStatement("INSERT INTO valeur (index_,idProjection) VALUES (?,?)");
+                preparedStatement = connection.prepareStatement("INSERT INTO valeur2 (index_,idProjection) VALUES (?,?)");
                 preparedStatement.setDouble(1, val);
                 preparedStatement.setInt(2, index);
                 preparedStatement.execute();
+                preparedStatement.close();
             }
-            preparedStatement.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -315,6 +322,7 @@ public class MySQL {
             while (rs.next()) {
                 map.put(rs.getInt(1),rs.getString(2));
             }
+            preparedStatement.close();
             return map;
         } catch (SQLException e) {
             e.printStackTrace();
