@@ -4,71 +4,32 @@ import java.io.File;
 import java.io.IOException;
 
 public class InitDataBase {
-    public static void init() throws IOException {
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_0.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_1.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_2.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_3.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_4.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_5.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_6.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_7.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_8.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_9.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_10.jpg");
-        InitDataBase.addImageToDataBase("Lanta", "Axel", "img/Base_Images_Apprentissage/AXEL_LANTA/AXEL_LANTA_11.jpg");
+    public void init() throws IOException {
 
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_0.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_1.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_3.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_2.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_4.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_5.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_6.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_7.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_8.jpg");
-        InitDataBase.addImageToDataBase("Bueri", "Celio", "img/Base_Images_Apprentissage/CELIO_BUERI/CELIO_BUERI_9.jpg");
+        String src = "img/Base_Images_Apprentissage";
+        File file = new File(src);
 
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_0.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_1.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_3.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_2.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_4.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_5.jpg");
-        InitDataBase.addImageToDataBase("Duranteau", "Damien", "img/Base_Images_Apprentissage/DAMIEN_DURANTEAU/DAMIEN_DURANTEAU_6.jpg");
+        String nom;
+        String prenom;
 
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_0.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_1.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_3.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_2.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_4.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_5.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_6.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_7.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_8.jpg");
-        InitDataBase.addImageToDataBase("Outrebon", "Celio", "img/Base_Images_Apprentissage/EDOUARD_OUTREBON/EDOUARD_OUTREBON_9.jpg");
-
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_0.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_1.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_3.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_2.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_4.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_5.jpg");
-        InitDataBase.addImageToDataBase("Ollivier", "Remy", "img/Base_Images_Apprentissage/REMY_OLLIVIER/REMY_OLLIVIER_6.jpg");
-
-
+        for(String str : file.list()) {
+            nom = str.split("_")[1];
+            prenom = str.split("_")[0];
+            File file2 = new File(src + "/" +str);
+            for(String image : file2.list()) {
+                addImageToDataBase(nom, prenom, src + "/" + str + "/"+image);
+            }
+        }
     }
 
 
-    public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
+    public void addImageToDataBase(String nom, String prenom, String source) throws IOException {
 
         String name = new File(source).getName();
         ImageProcessing img = new ImageProcessing(source, "COULEUR");
-        img.toBlackAndWhite();
-        img.resize(Main.WIDTH,Main.HEIGHT);
         img.save("img/DataBaseImage/" + name);
 
         MySQL mysql = MySQL.getInstance();
-        mysql.addImage(nom, prenom, "img/DataBaseImage/" + name);
+        mysql.addImage(nom, prenom, source);
     }
 }
