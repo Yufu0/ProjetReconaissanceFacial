@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 public class FaceRecognition {
     public static void recognition(String imageSrc) throws IOException {
+        
+        MySQL mysql = MySQL.getInstance();
+        
         /* ouverture de l'image et modification au format souhaité */
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc);
         faceToRecognize.toBlackAndWhite();
@@ -13,13 +16,13 @@ public class FaceRecognition {
         Vector vectorToRecognize = faceToRecognize.toMatrix().toVector();
 
         /* recuperation des eigenfaces dans la bdd */
-        Matrix eigenfaces = MySQL.getEigenfaces();
+        Matrix eigenfaces = mysql.getEigenfaces();
 
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
         Vector vectorToRecognizeProjected = eigenfaces.projectVector(vectorToRecognize);
 
         /* recuperation des coordonnées des visages dans l'espace des eigen faces */
-        HashMap<Integer, Vector> faces = MySQL.getProjectedFaces();
+        HashMap<Integer, Vector> faces = mysql.getProjectedFaces();
 
         /* comparaison avec tous les visages pour determiner le plus proche */
         int closestId = -1;
@@ -37,7 +40,7 @@ public class FaceRecognition {
             System.out.println("Le visage est inconnu");
         } else {
             /* on vas chercher le nom de la personne grace a son id */
-            String name = MySQL.getName(closestId);
+            String name = mysql.getName(closestId);
             System.out.println("Visage trouvé, c'est le visage de " + name + " !");
         }
     }
