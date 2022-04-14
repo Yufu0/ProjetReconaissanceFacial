@@ -10,19 +10,41 @@ public class FaceRecognition {
         MySQL mysql = MySQL.getInstance();
 
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc, "COULEUR");
-        faceToRecognize.toBlackAndWhite();
-        faceToRecognize.resize(Main.WIDTH, Main.HEIGHT);
+
         /* convertion de l'image en un vecteur */
         Vector vectorToRecognize = faceToRecognize.toMatrix().toVector();
 
-        /* recuperation des eigenfaces dans la bdd */
-        Matrix eigenfaces = mysql.getEigenfaces();
+
+
+        /* recuperation des images depuis la bdd {idImage => source} */
+        HashMap<Integer, String> images = mysql.getImages();
+
+        /* convertion des images en un vecteurs */
+        int i = 0;
+        Vector[] vectorsImages = new Vector[images.size()];
+        for (int id : images.keySet()) {
+            vectorsImages[i] = (new ImageProcessing(images.get(id), "N&B")).toMatrix().toVector();
+            i++;
+        }
+
+        /* convertion du tableau de vecteurs en une matrice */
+        Matrix matrixImages = new Matrix(vectorsImages);
+
+
+        /* calcule de l'ACP sur cette matrice */
+        ACP acp = new ACP(matrixImages);
 
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
-        Vector vectorToRecognizeProjected = eigenfaces.projectVector(vectorToRecognize);
+        Vector vectorToRecognizeProjected = acp.getEigenMatrix().projectVector(vectorToRecognize);
 
-        /* recuperation des coordonnées des visages dans l'espace des eigen faces */
-        HashMap<Integer, Vector> faces = mysql.getProjectedFaces();
+
+        /* on projettent tous les vecteurs sur l'espace des eigenfaces */
+        HashMap<Integer, Vector> faces = new HashMap<>();
+        for (int idImage : images.keySet()) {
+            Vector vector = (new ImageProcessing(images.get(idImage), "N&B").toMatrix().toVector());
+            Vector vectorProjected = acp.getEigenMatrix().projectVector(vector);
+            faces.put(idImage, vectorProjected);
+        }
 
         /* comparaison avec tous les visages pour determiner le plus proche */
         int closestId = -1;

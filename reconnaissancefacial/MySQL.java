@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class MySQL {
 
-    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","root","");
+    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","celio","celio");
 
     private final String urlBase;
     private final String host;

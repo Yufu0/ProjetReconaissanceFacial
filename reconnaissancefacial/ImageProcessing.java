@@ -1,6 +1,7 @@
 package reconnaissancefacial;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
@@ -8,114 +9,69 @@ import java.io.File;
 import java.io.IOException;
 
 public class ImageProcessing {
-
-    private int[][][] imageTableau;
+    private int[][] imageTableau;
 
     public ImageProcessing(String source, String type) throws IOException {
+        BufferedImage img = ImageIO.read(new File(source));
+
         if (type == "COULEUR") {
-            BufferedImage img = ImageIO.read(new File(source));
             int width = img.getWidth(null);
             int height = img.getHeight(null);
+            // crée l'image de sortie
+            BufferedImage newImg = new BufferedImage(Main.WIDTH, Main.HEIGHT, BufferedImage.TYPE_INT_RGB);
 
+            // balancer l'image d'entrée à l'image de sortie
+            Graphics2D g = newImg.createGraphics();
+            g.drawImage(img, 0, 0, Main.WIDTH, Main.HEIGHT, 0, 0, width, height,null);
+            g.dispose();
 
-            this.imageTableau = new int[width][height][3];
+            this.imageTableau = new int[Main.WIDTH][Main.HEIGHT];
 
-            Raster tramPixelsImg = img.getRaster();
+            Raster tramPixelsImg = newImg.getRaster();
 
             int[] rgb;
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
+            for (int i = 0; i < Main.WIDTH; i++) {
+                for (int j = 0; j < Main.HEIGHT; j++) {
                     rgb = tramPixelsImg.getPixel(i, j, (int[]) null);
-                    this.imageTableau[i][j] = new int[] {rgb[0], rgb[1], rgb[2]};
+                    this.imageTableau[i][j] = (int) Math.floor(0.2126 * (double) rgb[0] + 0.7152 * (double) rgb[1] + 0.0722 * (double) rgb[2]);
                 }
             }
         } else if (type == "N&B") {
-            BufferedImage img = ImageIO.read(new File(source));
-            int width = img.getWidth(null);
-            int height = img.getHeight(null);
-
-
-            this.imageTableau = new int[width][height][1];
+            this.imageTableau = new int[Main.WIDTH][Main.HEIGHT];
 
             Raster tramPixelsImg = img.getRaster();
 
-            int[] a;
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    a = tramPixelsImg.getPixel(i, j, (int[]) null);
-                    this.imageTableau[i][j] = new int[] {a[0]};
+            int[] b;
+            for (int i = 0; i < Main.WIDTH; i++) {
+                for (int j = 0; j < Main.HEIGHT; j++) {
+                    b = tramPixelsImg.getPixel(i, j, (int[]) null);
+                    this.imageTableau[i][j] = b[0];
                 }
             }
         }
     }
 
-    public void toBlackAndWhite() {
-        if (this.imageTableau.length == 0 || this.imageTableau[0].length == 0 || this.imageTableau[0][0].length != 3) return;
-        for (int i = 0; i < this.imageTableau.length; i++) {
-            for (int j = 0; j < this.imageTableau[i].length; j++) {
-                this.imageTableau[i][j] = new int[] {(int) Math.floor(0.2126 * (double) this.imageTableau[i][j][0] + 0.7152 * (double) this.imageTableau[i][j][1] + 0.0722 * (double) this.imageTableau[i][j][2])};
-            }
-        }
-    }
-
-    public void resize(int width, int height) {
-        if (this.imageTableau.length < width || this.imageTableau[0].length < height || this.imageTableau[0][0].length != 1) return;
-
-        int[][][] newImageTableau = new int[width][height][1];
-
-        int saveK;
-        int saveL;
-        int compteur;
-        int somme;
-        int k = 0;
-        int l = 0;
-
-        for (int i = 0; i < width; i++) {
-            saveK = k;
-            l=0;
-            for (int j = 0; j < height; j++) {
-                compteur = 0;
-                somme = 0;
-
-                k = saveK;
-                saveL = l;
-                while (k * width / this.imageTableau.length == i) {
-                    l = saveL;
-                    while (l * height / this.imageTableau[k].length == j) {
-                        somme += this.imageTableau[k][l][0];
-                        compteur++;
-                        l++;
-                    }
-                    k++;
-                }
-
-                if (compteur != 0 && somme != 0) newImageTableau[i][j] = new int[]{somme / compteur};
-            }
-        }
-        this.imageTableau = newImageTableau;
-    }
 
     public Matrix toMatrix(){
-        if (this.imageTableau.length == 0 || this.imageTableau[0].length == 0 || this.imageTableau[0][0].length != 1) throw new RuntimeException("Oof c'est pas en N&B");
+        if (this.imageTableau.length == 0 || this.imageTableau[0].length == 0);
         Matrix m = new Matrix(this.imageTableau.length, this.imageTableau[0].length);
         for (int i = 0; i < this.imageTableau.length; i++) {
             for (int j = 0; j < this.imageTableau[i].length; j++) {
-                m.set(i,j, (double)this.imageTableau[i][j][0]);
+                m.set(i,j, (double) this.imageTableau[i][j]);
             }
         }
 
         return m;
     }
-
     public void save(String source) throws IOException {
         BufferedImage image = new BufferedImage(this.imageTableau.length, this.imageTableau[0].length, BufferedImage.TYPE_BYTE_GRAY);
         WritableRaster raster = image.getRaster();
         int[] arrayInt;
         for (int i = 0; i < this.imageTableau.length; i++) {
             for (int j = 0; j < this.imageTableau[0].length; j++) {
-                arrayInt = new int[]{this.imageTableau[i][j][0]};
-                if(this.imageTableau[i][j][0] > 255) arrayInt = new int[]{255};
-                if (this.imageTableau[i][j][0] < 0) arrayInt = new int[]{0};
+                arrayInt = new int[]{this.imageTableau[i][j]};
+                if(this.imageTableau[i][j] > 255) arrayInt = new int[]{255};
+                if (this.imageTableau[i][j] < 0) arrayInt = new int[]{0};
                 raster.setPixel(i, j, arrayInt);
             }
         }

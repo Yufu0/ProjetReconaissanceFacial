@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class InitDataBase {
-    public void init() throws IOException {
+    public static void init() throws IOException {
 
         String src = "img/Base_Images_Apprentissage";
         File file = new File(src);
@@ -23,8 +23,8 @@ public class InitDataBase {
     }
 
 
-    public void addImageToDataBase(String nom, String prenom, String source) throws IOException {
-
+    public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
+        System.out.println(source);
         String name = new File(source).getName();
         ImageProcessing img = new ImageProcessing(source, "COULEUR");
         img.save("img/DataBaseImage/" + name);
