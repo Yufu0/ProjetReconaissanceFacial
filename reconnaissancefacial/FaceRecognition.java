@@ -30,12 +30,17 @@ public class FaceRecognition {
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);
 
-
+        System.out.println("av acp");
         /* calcule de l'ACP sur cette matrice */
         ACP acp = new ACP(matrixImages);
+        System.out.println("ap acp");
 
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
         Vector vectorToRecognizeProjected = acp.getEigenMatrix().projectVector(vectorToRecognize);
+
+
+
+
 
 
         /* on projettent tous les vecteurs sur l'espace des eigenfaces */
@@ -51,11 +56,13 @@ public class FaceRecognition {
         double distance = -1;
         for (int id : faces.keySet()) {
             double newDistance = vectorToRecognizeProjected.compareTo(faces.get(id));
+            System.out.println(newDistance);
             if (distance < 0 || distance > newDistance) {
                 distance = newDistance;
                 closestId = id;
             }
         }
+
 
         /* affichage du resultat */
         if (closestId == -1 || distance > Main.EPSILON) {

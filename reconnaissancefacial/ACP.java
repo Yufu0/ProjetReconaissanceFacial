@@ -48,10 +48,12 @@ public class ACP {
 
         // on stock les valeurs et vecteurs dans une map
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
-            double value = eigenDecomposition.getRealEigenvalue(i);
-            Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
-            vector.normalise();
-            this.getEigenVectors().put(value, vector);
+            if (i<3) {
+                double value = eigenDecomposition.getRealEigenvalue(i);
+                Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
+                vector.normalise();
+                this.getEigenVectors().put(value, vector);
+            }
         }
     }
 }
