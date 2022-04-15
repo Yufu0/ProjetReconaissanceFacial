@@ -8,14 +8,16 @@ public class ACP {
     private Matrix matrixVectorsImage;
     private Vector vectorMean;
     private HashMap<Double, Vector> eigenVectors;
+    private double quantiteInformationMinimum;
 
     public HashMap<Double, Vector> getEigenVectors() {
         return eigenVectors;
     }
 
-    public ACP(Matrix matrixImage) {
+    public ACP(Matrix matrixImage, double quantiteInformationMinimum) {
         this.matrixVectorsImage = matrixImage;
         this.eigenVectors = new HashMap<>();
+        this.quantiteInformationMinimum = quantiteInformationMinimum;
         this.compute();
     }
 
@@ -51,13 +53,13 @@ public class ACP {
         }
 
         // on stock les valeurs et vecteurs dans une map
-        // on garde les k permier vecteurs propre tel qu'ils aient au moins 50% de l'information
+        // on garde les k permier vecteurs propre tel qu'ils aient au moins X % de l'information
         double currentSumEigenvalues = 0.0;
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
             double eigenvalue = eigenDecomposition.getRealEigenvalue(i);
 
 
-            if (currentSumEigenvalues < 0.5 * sumEigenvalues) {
+            if (currentSumEigenvalues < this.quantiteInformationMinimum * sumEigenvalues) {
                 Vector eigenvector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
                 eigenvector.normalise();
                 this.getEigenVectors().put(eigenvalue, eigenvector);
