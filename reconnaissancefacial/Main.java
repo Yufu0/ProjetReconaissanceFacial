@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 100;
-    public static final int EPSILON = 10000000;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 1000;
+    public static final int EPSILON = WIDTH*HEIGHT/100;
 
     public static void main(String[] args) throws IOException {
 

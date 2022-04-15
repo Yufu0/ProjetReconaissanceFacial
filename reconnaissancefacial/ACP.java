@@ -23,7 +23,6 @@ public class ACP {
         return new Matrix(Stream.of(this.getEigenVectors().values().toArray()).toArray(Vector[]::new));
     }
 
-
     public Matrix getMatrixVectorsImage() {
         return matrixVectorsImage;
     }
