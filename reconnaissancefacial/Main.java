@@ -2,30 +2,26 @@ package reconnaissancefacial;
 
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Main {
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 1000;
-    public static final int EPSILON = WIDTH*HEIGHT/100;
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 300;
+    public static final int EPSILON = 10000;
 
     public static void main(String[] args) throws IOException {
+        if (args.length == 1 && args[0].compareTo("init") == 0) {
+            final MySQL database =  MySQL.getInstance();
+            database.connexion();
+            InitDataBase.init();
+            database.deconnexion();
+        }
 
-        final MySQL database =  MySQL.getInstance();
-        database.connexion();
-
-
-        //InitDataBase.init();
-
-        System.out.println("fin");
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Veuillez saisir un le visage :");
-        String str = sc.nextLine();
-
-        FaceRecognition faceRecognition = new FaceRecognition(str);
-
-        database.deconnexion();
+        if (args.length == 2 && args[0].compareTo("check") == 0) {
+            final MySQL database =  MySQL.getInstance();
+            database.connexion();
+            FaceRecognition faceRecognition = new FaceRecognition(args[1]);
+            database.deconnexion();
+        }
     }
 
 }

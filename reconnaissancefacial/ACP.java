@@ -44,15 +44,25 @@ public class ACP {
         Matrix matrixA = this.getMatrixVectorsImage().transpose().multiply(this.getMatrixVectorsImage());
         EigenDecomposition eigenDecomposition = new EigenDecomposition(matrixA.toArray2DRowRealMatrix());
 
+        // on calcule la somme des valeurs propre
+        double sumEigenvalues = 0.0;
+        for (double eigenvalue : eigenDecomposition.getRealEigenvalues()) {
+            sumEigenvalues += eigenvalue;
+        }
 
         // on stock les valeurs et vecteurs dans une map
+        // on garde les k permier vecteurs propre tel qu'ils aient au moins 50% de l'information
+        double currentSumEigenvalues = 0.0;
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
-            if (i<3) {
-                double value = eigenDecomposition.getRealEigenvalue(i);
-                Vector vector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
-                vector.normalise();
-                this.getEigenVectors().put(value, vector);
+            double eigenvalue = eigenDecomposition.getRealEigenvalue(i);
+
+
+            if (currentSumEigenvalues < 0.5 * sumEigenvalues) {
+                Vector eigenvector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
+                eigenvector.normalise();
+                this.getEigenVectors().put(eigenvalue, eigenvector);
             }
+            currentSumEigenvalues += eigenvalue;
         }
     }
 }

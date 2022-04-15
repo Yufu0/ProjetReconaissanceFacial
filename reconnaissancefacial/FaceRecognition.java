@@ -14,8 +14,6 @@ public class FaceRecognition {
         /* convertion de l'image en un vecteur */
         Vector vectorToRecognize = faceToRecognize.toMatrix().toVector();
 
-
-
         /* recuperation des images depuis la bdd {idImage => source} */
         HashMap<Integer, String> images = mysql.getImages();
 
@@ -30,18 +28,12 @@ public class FaceRecognition {
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);
 
-        System.out.println("av acp");
         /* calcule de l'ACP sur cette matrice */
         ACP acp = new ACP(matrixImages);
-        System.out.println("ap acp");
+        System.out.println("Projection sur  : " + acp.getEigenMatrix().getWidth() + " eigenfaces");
 
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
         Vector vectorToRecognizeProjected = acp.getEigenMatrix().projectVector(vectorToRecognize);
-
-
-
-
-
 
         /* on projettent tous les vecteurs sur l'espace des eigenfaces */
         HashMap<Integer, Vector> faces = new HashMap<>();
@@ -50,18 +42,22 @@ public class FaceRecognition {
             Vector vectorProjected = acp.getEigenMatrix().projectVector(vector);
             faces.put(idImage, vectorProjected);
         }
+        System.out.println(vectorToRecognizeProjected.getLenght());
 
         /* comparaison avec tous les visages pour determiner le plus proche */
         int closestId = -1;
         double distance = -1;
+        double total =0.0;
         for (int id : faces.keySet()) {
             double newDistance = vectorToRecognizeProjected.compareTo(faces.get(id));
+            total += newDistance;
             System.out.println(newDistance);
             if (distance < 0 || distance > newDistance) {
                 distance = newDistance;
                 closestId = id;
             }
         }
+        System.out.println("precision : " + (int)(distance/total*100*faces.size()) + " %");
 
 
         /* affichage du resultat */
