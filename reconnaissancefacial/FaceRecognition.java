@@ -57,16 +57,20 @@ public class FaceRecognition {
                 closestId = id;
             }
         }
-        System.out.println("precision : " + (int)(distance/total*100*faces.size()) + " %");
+        System.out.println("precision : " + (int)(100*distance/total*faces.size()) + " %");
 
 
         /* affichage du resultat */
-        if (closestId == -1 || distance > Main.EPSILON) {
-            System.out.println("Le visage est inconnu");
+        /* on vas chercher le nom de la personne grace a son id */
+        String name = mysql.getName(closestId);
+        if (distance/total*faces.size() < 0.1) {
+            System.out.println("C'est le visage de " + name + " (" + (int) (100*distance/total*faces.size()) + "%)");
+        } else if ((distance/total*faces.size()) < 0.2) {
+            System.out.println("C'est surement le visage de " + name + " (" + (int) (100*distance/total*faces.size())+ "%)");
+        } else  if (distance/total*faces.size() < 0.3) {
+            System.out.println("C'est peut-être le visage de " + name + " (" + (int) (100*distance/total*faces.size())+ "%)");
         } else {
-            /* on vas chercher le nom de la personne grace a son id */
-            String name = mysql.getName(closestId);
-            System.out.println("Visage trouvé, c'est le visage de " + name + " !");
+            System.out.println("Le visage est inconnu (" + (int) (100*distance/total*faces.size())+ "%)");
         }
     }
 }
