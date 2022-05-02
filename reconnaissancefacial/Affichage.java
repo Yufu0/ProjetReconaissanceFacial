@@ -10,7 +10,7 @@ public class Affichage {
         MySQL mysql = MySQL.getInstance();
 
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc, "COULEUR");
-
+        faceToRecognize.toMatrix().export("ImageEntre.jpg");
         /* convertion de l'image en un vecteur */
         Vector vectorToRecognize = faceToRecognize.toMatrix().toVector();
 
@@ -33,15 +33,23 @@ public class Affichage {
 
 
         acp.getVectorMean().toMatrix(Main.WIDTH).export("visageMoyen.jpg");
-
+        vectorToRecognize=vectorToRecognize.toMatrix(Main.WIDTH).add(acp.getVectorMean().toMatrix(Main.WIDTH).multiplyByConstant(-1)).toVector();
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
         Vector vectorToRecognizeProjected = acp.getEigenMatrix().projectVector(vectorToRecognize);
 
         Matrix imageReconstruite = new Matrix(Main.WIDTH, Main.HEIGHT);
-        imageReconstruite.add(acp.getVectorMean().toMatrix(Main.WIDTH));
+        imageReconstruite=imageReconstruite.add(acp.getVectorMean().toMatrix(Main.WIDTH));
+        imageReconstruite.export("imageReconstruit.jpg");
+        double eeeee=0;
         for (int k = 0; k < acp.getEigenVectors().size(); k++) {
-            imageReconstruite.add(acp.getEigenMatrix().getVectors()[i].toMatrix(Main.WIDTH).multiplyByConstant(vectorToRecognizeProjected.get(k)));
-            imageReconstruite.export("imageReconstruit_"+ i + ".jpg");
+            imageReconstruite=imageReconstruite.add(acp.getEigenMatrix().getVectors()[acp.getEigenVectors().size()-k-1].toMatrix(Main.WIDTH).multiplyByConstant(vectorToRecognizeProjected.get(acp.getEigenVectors().size()-k-1)));
+            System.out.println("k = "+k+" : erreur = " + (eeeee-imageReconstruite.compareTo(faceToRecognize.toMatrix())));
+            System.out.println(eeeee=imageReconstruite.compareTo(faceToRecognize.toMatrix()));
+            imageReconstruite.export("imageReconstruit"+k+".jpg");
+        }
+
+        for (int k = 0; k < acp.getEigenVectors().size(); k++) {
+            acp.getEigenMatrix().getVectors()[k].toMatrix(Main.WIDTH).multiplyByConstant(20000).export("Eigenfaces"+k+".jpg");
         }
 ///*
 //        /* on projettent tous les vecteurs sur l'espace des eigenfaces */

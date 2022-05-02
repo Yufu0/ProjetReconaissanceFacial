@@ -38,7 +38,9 @@ public class ACP {
         this.vectorMean = this.matrixVectorsImage.computeMean();
 
         // centrer les vecteurs
+
         this.matrixVectorsImage.subtractAll(this.vectorMean);
+
 
         // calcule des valeurs propres
         // necessite de transformer la matrice de cov en 'Array2DRowRealMatrix' pour utiliser la classe EigenDecomposition

@@ -4,10 +4,34 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class FaceRecognition {
+    private String firstNameIdentified = "inconnu";
+    private String lastNameIdentified = "inconnu";
+    private double error = 0;
+
+
+    private String closestImage = "img/inconnu.png";
+
+    public String getClosestImage() {
+        return closestImage;
+    }
+
+    public String getFirstNameIdentified() {
+        return firstNameIdentified;
+    }
+
+    public String getLastNameIdentified() {
+        return lastNameIdentified;
+    }
+
+    public double getError() {
+        return error;
+    }
+
     public FaceRecognition(String imageSrc) throws IOException {
         /* ouverture de l'image et modification au format souhaité */
 
         MySQL mysql = MySQL.getInstance();
+        mysql.connexion();
 
         ImageProcessing faceToRecognize = new ImageProcessing(imageSrc, "COULEUR");
 
@@ -28,9 +52,10 @@ public class FaceRecognition {
         /* convertion du tableau de vecteurs en une matrice */
         Matrix matrixImages = new Matrix(vectorsImages);
 
+        System.out.println("Calcul en cours...");
+
         /* calcule de l'ACP sur cette matrice */
-        ACP acp = new ACP(matrixImages);
-        System.out.println("Projection sur  : " + acp.getEigenMatrix().getWidth() + " eigenfaces");
+        ACP acp = new ACP(matrixImages, 0.8);
 
         /* projection du vecteur de l'image sur l'espace des eigenfaces */
         Vector vectorToRecognizeProjected = acp.getEigenMatrix().projectVector(vectorToRecognize);
@@ -42,7 +67,6 @@ public class FaceRecognition {
             Vector vectorProjected = acp.getEigenMatrix().projectVector(vector);
             faces.put(idImage, vectorProjected);
         }
-        System.out.println(vectorToRecognizeProjected.getLenght());
 
         /* comparaison avec tous les visages pour determiner le plus proche */
         int closestId = -1;
@@ -51,26 +75,23 @@ public class FaceRecognition {
         for (int id : faces.keySet()) {
             double newDistance = vectorToRecognizeProjected.compareTo(faces.get(id));
             total += newDistance;
-            System.out.println(newDistance);
+            //System.out.println(mysql.getName(id)+"|"+id+"|"+newDistance);
             if (distance < 0 || distance > newDistance) {
                 distance = newDistance;
                 closestId = id;
             }
         }
-        System.out.println("precision : " + (int)(100*distance/total*faces.size()) + " %");
-
-
         /* affichage du resultat */
         /* on vas chercher le nom de la personne grace a son id */
-        String name = mysql.getName(closestId);
-        if (distance/total*faces.size() < 0.1) {
-            System.out.println("C'est le visage de " + name + " (" + (int) (100*distance/total*faces.size()) + "%)");
-        } else if ((distance/total*faces.size()) < 0.2) {
-            System.out.println("C'est surement le visage de " + name + " (" + (int) (100*distance/total*faces.size())+ "%)");
-        } else  if (distance/total*faces.size() < 0.3) {
-            System.out.println("C'est peut-être le visage de " + name + " (" + (int) (100*distance/total*faces.size())+ "%)");
-        } else {
-            System.out.println("Le visage est inconnu (" + (int) (100*distance/total*faces.size())+ "%)");
+
+        if (distance<Main.EPSILON * 2) {
+            String[] name = mysql.getName(closestId);
+            closestImage =  images.get(closestId);
+            firstNameIdentified = name[0];
+            lastNameIdentified = name[1];
+            error = distance;
         }
+
+        System.out.println("fini");
     }
 }

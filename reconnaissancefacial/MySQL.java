@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class MySQL {
 
-    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","celio","celio");
+    private static final MySQL instance = new MySQL("jdbc:mysql://","localhost","rf","root","");
 
     private final String urlBase;
     private final String host;
@@ -26,7 +26,11 @@ public class MySQL {
     public void connexion() {
         if (!isOnline()) {
             try {
-                connection = DriverManager.getConnection(this.urlBase + this.host  + "/" + this.database, this.userName, this.password);
+                Connection connection1 = DriverManager.getConnection(this.urlBase + this.host , this.userName, this.password);
+                Statement preparedStatement1 = connection1.createStatement();
+                preparedStatement1.executeUpdate("CREATE DATABASE IF NOT EXISTS rf;"); // now the database physically exists
+                preparedStatement1.close();
+                connection = DriverManager.getConnection(this.urlBase + this.host  + "/" + this.database , this.userName, this.password);
                 Statement preparedStatement = connection.createStatement();
                 String createTablePersonne = "CREATE TABLE IF NOT EXISTS personne (" +
                         "idPersonne INTEGER AUTO_INCREMENT PRIMARY KEY," +
@@ -41,33 +45,26 @@ public class MySQL {
                         "CONSTRAINT fk_personne FOREIGN KEY (idPersonne) REFERENCES personne(idPersonne));";
                 preparedStatement.executeUpdate(createTableImage);
 
-                String createTableEigenface = "CREATE TABLE IF NOT EXISTS eigenface (" +
-                        "idEigenface INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "valPropre DOUBLE);";
-                preparedStatement.executeUpdate(createTableEigenface);
-
-                String createTableValeur = "CREATE TABLE IF NOT EXISTS valeur (" +
-                        "idValeur INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "index_ DOUBLE not NULL, " +
-                        "idEigenface INTEGER not NULL," +
-                        "CONSTRAINT fk_eigenface FOREIGN KEY (idEigenface) REFERENCES eigenface(idEigenface));";
-                preparedStatement.executeUpdate(createTableValeur);
-
-                String createTableProjection = "CREATE TABLE IF NOT EXISTS projection (" +
-                        "idProjection INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "idImage INTEGER not NULL," +
-                        "CONSTRAINT fk_image FOREIGN KEY (idImage) REFERENCES image(idImage));";
-                preparedStatement.executeUpdate(createTableProjection);
-
-                String createTableValeur2 = "CREATE TABLE IF NOT EXISTS valeur2 (" +
-                        "idValeur INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "index_ DOUBLE not NULL, " +
-                        "idProjection INTEGER not NULL," +
-                        "CONSTRAINT fk_projection FOREIGN KEY (idProjection) REFERENCES projection(idProjection));";
-                preparedStatement.executeUpdate(createTableValeur2);
-
                 preparedStatement.close();
                 System.out.println("[MySQL] Connexion effectuée.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void clearOldTable(){
+        if (isOnline()) {
+            try {
+                Statement preparedStatement = connection.createStatement();
+                String deleteTableImage = "DELETE FROM image ;";
+                preparedStatement.executeUpdate(deleteTableImage);
+
+                String deleteTablePersonne = "DELETE FROM personne;";
+                preparedStatement.executeUpdate(deleteTablePersonne);
+
+                preparedStatement.close();
+                System.out.println("[MySQL] Suppression effectuée.");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -109,12 +106,12 @@ public class MySQL {
 
 
 
-    public String getName(int idImage) {
+    public String[] getName(int idImage) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT nom, prenom from personne,image WHERE personne.idPersonne = image.idPersonne AND image.idImage = ?");
             preparedStatement.setInt(1, idImage);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) return "" + rs.getString(1) + " " + rs.getString(2);
+            if (rs.next()) return new String[]{rs.getString(1), rs.getString(2)};
             else throw new SQLException("Erreur récupération nom et prénom");
         } catch (SQLException e) {
             e.printStackTrace();

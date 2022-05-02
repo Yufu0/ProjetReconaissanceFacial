@@ -2,6 +2,12 @@ package reconnaissancefacial;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
+
 public class Matrix {
     Vector[] data;
 
@@ -69,7 +75,6 @@ public class Matrix {
 
     /* calcule du vecteur image moyen */
     public Vector computeMean() {
-        System.out.println(getWidth() + " : " + getHeight());
         Vector vectorMean =  new Vector(this.getHeight());
         double sum;
         for (int y = 0; y < this.getHeight(); y++) {
@@ -179,5 +184,20 @@ public class Matrix {
             }
         }
         return Math.sqrt(distance);
+    }
+
+    public void export(String name) throws IOException {
+        BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        WritableRaster raster = image.getRaster();
+        int[] arrayInt;
+        for (int i = 0; i < this.getWidth(); i++) {
+            for (int j = 0; j < this.getHeight(); j++) {
+                arrayInt = new int[]{(int) this.get(i, j)};
+                if(this.get(i, j) > 255) arrayInt = new int[]{255};
+                if (this.get(i, j) < 0) arrayInt = new int[]{0};
+                raster.setPixel(i, j, arrayInt);
+            }
+        }
+        ImageIO.write(image, "jpg", new File(name));
     }
 }

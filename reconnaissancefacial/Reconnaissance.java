@@ -2,12 +2,7 @@ package reconnaissancefacial;
 
 
 
-import java.io.File;
-import java.nio.file.Files;
-
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -24,6 +19,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Reconnaissance extends Application {
     public void start(Stage stage) {
         stage.setTitle("Reconnaissance faciale");
@@ -32,20 +30,10 @@ public class Reconnaissance extends Application {
         p.setPrefSize(1000, 700);
         Button ajouterImg = new Button("Ajouter une image");
         ajouterImg.setPrefSize(300, 100);
-        ajouterImg.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                stage.setScene(ajouter(stage));
-            }
-        });
+        ajouterImg.setOnAction(e -> stage.setScene(ajouter(stage)));
         Button tester = new Button("Tester un visage");
         tester.setPrefSize(300, 100);
-        tester.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                stage.setScene(tester(stage));
-            }
-        });
+        tester.setOnAction(e -> stage.setScene(tester(stage)));
         p.getChildren().add(ajouterImg);
         p.getChildren().add(tester);
         p.setHgap(100);
@@ -83,41 +71,30 @@ public class Reconnaissance extends Application {
         img.setFitWidth(800);
 
         Button select = new Button("Sélectionner une image");
-        select.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                FileChooser fc = new FileChooser();
-                File f = fc.showOpenDialog(null);
-                if (f != null) {
-                    img.setImage(new Image(f.toURI().toString()));
-                }
+        select.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            File f = fc.showOpenDialog(null);
+            if (f != null) {
+                img.setImage(new Image(f.toURI().toString()));
             }
         });
         Button ajout = new Button("Ajouter l'image");
-        ajout.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                String n = nom.getText();
-                String p = prenom.getText();
-                if (!(n.equals("")) && !(p.equals(""))) {
+        ajout.setOnAction(e -> {
+            String n = nom.getText();
+            String p1 = prenom.getText();
+            if (!(n.equals("")) && !(p1.equals(""))) {
 
-                } else {
-                    Alert err = new Alert(AlertType.INFORMATION);
-                    err.setTitle("Erreur");
-                    err.setHeaderText(null);
-                    err.setContentText("Veuillez renseigner l'identité du visage");
-                    err.showAndWait();
-                }
-
+            } else {
+                Alert err = new Alert(AlertType.INFORMATION);
+                err.setTitle("Erreur");
+                err.setHeaderText(null);
+                err.setContentText("Veuillez renseigner l'identité du visage");
+                err.showAndWait();
             }
+
         });
         Button retour = new Button("Retour à l'accueil");
-        retour.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                start(stage);
-            }
-        });
+        retour.setOnAction(e -> start(stage));
 
         menu.getChildren().add(nom);
         menu.getChildren().add(prenom);
@@ -193,24 +170,28 @@ public class Reconnaissance extends Application {
         img2.setFitWidth(300);
         nomRec.setEditable(false);
         prenomRec.setEditable(false);
+        final File[] f = new File[1];
 
         Button select = new Button("Sélectionner un visage");
-        select.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                FileChooser fc = new FileChooser();
-                File f = fc.showOpenDialog(null);
-                if (f != null) {
-                    img1.setImage(new Image(f.toURI().toString()));
-                }
-
+        select.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            f[0] = fc.showOpenDialog(null);
+            if (f[0] != null) {
+                img1.setImage(new Image(f[0].toURI().toString()));
             }
+
         });
         Button tester = new Button("Tester un visage");
-        tester.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-
+        tester.setOnAction(e -> {
+            if (f[0] != null) {
+                try {
+                    FaceRecognition faceRecognition = new FaceRecognition(f[0].toString());
+                    img2.setImage(new Image(new File(faceRecognition.getClosestImage()).toURI().toString()));
+                    nomRec.setText(faceRecognition.getLastNameIdentified());
+                    prenomRec.setText(faceRecognition.getFirstNameIdentified());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         });
         Button retour = new Button("Retour à l'accueil");
