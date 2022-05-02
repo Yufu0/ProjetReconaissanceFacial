@@ -27,49 +27,59 @@ public class Reconnaissance extends Application {
         stage.setTitle("Reconnaissance faciale");
         stage.setResizable(false);
         FlowPane p = new FlowPane();
+
         p.setPrefSize(1000, 700);
+
         Button ajouterImg = new Button("Ajouter une image");
         ajouterImg.setPrefSize(300, 100);
         ajouterImg.setOnAction(e -> stage.setScene(ajouter(stage)));
+        ajouterImg.getStyleClass().add("button-choice");
+
         Button tester = new Button("Tester un visage");
         tester.setPrefSize(300, 100);
         tester.setOnAction(e -> stage.setScene(tester(stage)));
+        tester.getStyleClass().add("button-choice");
+
         p.getChildren().add(ajouterImg);
         p.getChildren().add(tester);
         p.setHgap(100);
         p.setAlignment(Pos.CENTER);
+        p.getStyleClass().add("body");
+
         Scene scene = new Scene(p);
+        scene.getStylesheets().add("./css/style.css");
+
         stage.setScene(scene);
         stage.sizeToScene();
         stage.show();
     }
 
     public Scene ajouter(Stage stage) {
-        BorderPane p = new BorderPane();
-        FlowPane menu = new FlowPane(Orientation.VERTICAL);
-        FlowPane arborescence = new FlowPane(Orientation.VERTICAL);
-        StackPane imgChoisie = new StackPane();
-        ImageView img = new ImageView();
-        TextField nom = new TextField();
 
-        final TreeView<String>[] treeView = new TreeView[]{new TreeView<String>(arborescence())};
-        arborescence.getChildren().add(treeView[0]);
+
+        ImageView img = new ImageView();
+
+        TextField nom = new TextField();
         nom.setPromptText("Nom");
+
         TextField prenom = new TextField();
         prenom.setPromptText("Prénom");
 
+        BorderPane p = new BorderPane();
         p.setPrefSize(1000, 700);
         p.setPadding(new Insets(10, 10, 10, 10));
+        p.getStyleClass().add("body");
+
+        FlowPane menu = new FlowPane(Orientation.VERTICAL);
         menu.setPadding(new Insets(10, 10, 10, 10));
         menu.setHgap(5);
         menu.setVgap(10);
-        menu.setStyle("-fx-border-color: blue");
-        arborescence.setStyle("-fx-border-color: cyan");
-        imgChoisie.setStyle("-fx-border-color: green");
+        menu.getStyleClass().add("menu");
 
         img.setFitHeight(700);
         img.setFitWidth(800);
-        File[] f = new File[1];
+
+        final File[] f = new File[1];
 
         Button select = new Button("Sélectionner une image");
         select.setOnAction(e -> {
@@ -83,10 +93,10 @@ public class Reconnaissance extends Application {
         ajout.setOnAction(e -> {
             String nomText = nom.getText();
             String prenomText = prenom.getText();
-            if (!nomText.equals("") && !prenomText.equals("") && f[0].isFile()) {
+            if (!(nomText.equals("")) && !(prenomText.equals(""))) {
                 try {
                     InitDataBase.addImageToDataBase(nomText, prenomText, f[0].toString());
-                    treeView[0] = new TreeView<String>(arborescence());
+                    //treeView[0] = new TreeView<String>(arborescence());
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -106,12 +116,22 @@ public class Reconnaissance extends Application {
         menu.getChildren().add(select);
         menu.getChildren().add(ajout);
         menu.getChildren().add(retour);
+
+        StackPane imgChoisie = new StackPane();
         imgChoisie.getChildren().add(img);
+        imgChoisie.getStyleClass().add("image-view");
+
+        TreeView<String> treeView = new TreeView<String>(arborescence());
+
         p.setCenter(imgChoisie);
         p.setRight(menu);
-        p.setLeft(arborescence);
+        p.setLeft(treeView);
+
         BorderPane.setMargin(imgChoisie, new Insets(0, 10, 0, 10));
+
         Scene ajouter = new Scene(p);
+        ajouter.getStylesheets().add("./css/style.css");
+
         return ajouter;
     }
     public TreeItem arboR(TreeItem root, File[] dir){
@@ -137,32 +157,44 @@ public class Reconnaissance extends Application {
     }
 
     public Scene tester(Stage stage) {
-        BorderPane p = new BorderPane();
-        FlowPane menu = new FlowPane(Orientation.VERTICAL);
-        StackPane imgEntree = new StackPane();
-        StackPane imgSortie = new StackPane();
-        ImageView img1 = new ImageView();
-        ImageView img2 = new ImageView();
+
         TextField nomRec = new TextField();
-        TextField prenomRec = new TextField();
         nomRec.setPromptText("Nom trouvé");
+        nomRec.setEditable(false);
+
+        TextField prenomRec = new TextField();
         prenomRec.setPromptText("Prénom trouvé");
+        prenomRec.setEditable(false);
 
 
+        BorderPane p = new BorderPane();
         p.setPrefSize(1000, 700);
         p.setPadding(new Insets(10, 10, 10, 10));
+
+        FlowPane menu = new FlowPane(Orientation.VERTICAL);
         menu.setPadding(new Insets(10, 10, 10, 10));
         menu.setHgap(5);
         menu.setVgap(10);
-        menu.setStyle("-fx-border-color: blue");
-        imgEntree.setStyle("-fx-border-color: green");
-        imgSortie.setStyle("-fx-border-color: green");
+        menu.getStyleClass().add("menu");
+
+        StackPane imgEntree = new StackPane();
+        imgEntree.setPrefWidth(400);
+        imgEntree.setMinWidth(300);
+        imgEntree.getStyleClass().add("image-view");
+
+        StackPane imgSortie = new StackPane();
+        imgSortie.setPrefWidth(400);
+        imgSortie.setMinWidth(300);
+        imgSortie.getStyleClass().add("image-view");
+
+        ImageView img1 = new ImageView();
         img1.setFitHeight(300);
         img1.setFitWidth(300);
+
+        ImageView img2 = new ImageView();
         img2.setFitHeight(300);
         img2.setFitWidth(300);
-        nomRec.setEditable(false);
-        prenomRec.setEditable(false);
+
         final File[] f = new File[1];
 
         Button select = new Button("Sélectionner un visage");
@@ -172,7 +204,6 @@ public class Reconnaissance extends Application {
             if (f[0] != null) {
                 img1.setImage(new Image(f[0].toURI().toString()));
             }
-
         });
         Button tester = new Button("Tester un visage");
         tester.setOnAction(e -> {
@@ -200,13 +231,18 @@ public class Reconnaissance extends Application {
         menu.getChildren().add(nomRec);
         menu.getChildren().add(prenomRec);
         menu.getChildren().add(retour);
+
         imgEntree.getChildren().add(img1);
         imgSortie.getChildren().add(img2);
+
         p.setLeft(imgEntree);
         p.setCenter(imgSortie);
         p.setRight(menu);
+        p.getStyleClass().add("body");
+
         BorderPane.setMargin(imgSortie, new Insets(0, 10, 0, 10));
         Scene test = new Scene(p);
+        test.getStylesheets().add("./css/style.css");
         return test;
     }
 
