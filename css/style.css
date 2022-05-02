@@ -1,0 +1,50 @@
+.body {
+    -fx-background-color : #1d1d1d;
+}
+
+.button-choice {
+    -fx-background-color: #3c3f41;
+    -fx-background-radius: 7px;
+    -fx-border-color: #379c6f;
+    -fx-border-radius: 5px;
+    -fx-border-width: 3px;
+    -fx-text-fill : #fff;
+    -fx-font-size: 20px;
+}
+
+.button-choice:hover{
+    -fx-background-color: #36393e;
+}
+
+.image-view {
+    -fx-background-radius: 7px;
+    -fx-border-color: #379c6f;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+}
+
+.menu {
+    -fx-background-color: #191919;
+    -fx-background-radius: 7px;
+    -fx-border-color: #fff;
+    -fx-border-radius: 5px;
+}
+
+.tree-view{
+    -fx-background-color: #36393e;
+    -fx-background-radius: 7px;
+
+}
+
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f8c555;
+}
+
+.tree-cell:hover{
+    -fx-text-fill: #f08d49;
+}
+
+.tree-cell > .tree-disclosure-node > .arrow  {
+    -fx-background-color: #5865f2;
+}
