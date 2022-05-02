@@ -24,12 +24,23 @@ public class InitDataBase {
 
 
     public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
+        MySQL mysql = MySQL.getInstance();
+
+        String dirImages = "img/DataBaseImage";
+        File dirFileImages = new File(dirImages);
+        if (! dirFileImages.exists()) dirFileImages.mkdir();
+
         System.out.println(source);
+
         String name = new File(source).getName();
         ImageProcessing img = new ImageProcessing(source, "COULEUR");
-        img.save("img/DataBaseImage/" + name);
 
-        MySQL mysql = MySQL.getInstance();
-        mysql.addImage(nom, prenom, "img/DataBaseImage/" + name);
+        String dir = "img/DataBaseImage/" + prenom.toUpperCase() + "_" + nom.toUpperCase();
+        File dirFile = new File(dir);
+        if (! dirFile.exists()) dirFile.mkdir();
+
+        String file = dir + "/" + name;
+        img.save(file);
+        mysql.addImage(nom, prenom, file);
     }
 }

@@ -52,8 +52,8 @@ public class Reconnaissance extends Application {
         ImageView img = new ImageView();
         TextField nom = new TextField();
 
-        TreeView<String> treeView = new TreeView<String>(arborescence());
-        arborescence.getChildren().add(treeView);
+        final TreeView<String>[] treeView = new TreeView[]{new TreeView<String>(arborescence())};
+        arborescence.getChildren().add(treeView[0]);
         nom.setPromptText("Nom");
         TextField prenom = new TextField();
         prenom.setPromptText("Prénom");
@@ -69,21 +69,27 @@ public class Reconnaissance extends Application {
 
         img.setFitHeight(700);
         img.setFitWidth(800);
+        File[] f = new File[1];
 
         Button select = new Button("Sélectionner une image");
         select.setOnAction(e -> {
             FileChooser fc = new FileChooser();
-            File f = fc.showOpenDialog(null);
-            if (f != null) {
-                img.setImage(new Image(f.toURI().toString()));
+            f[0] = fc.showOpenDialog(null);
+            if (f[0] != null) {
+                img.setImage(new Image(f[0].toURI().toString()));
             }
         });
         Button ajout = new Button("Ajouter l'image");
         ajout.setOnAction(e -> {
-            String n = nom.getText();
-            String p1 = prenom.getText();
-            if (!(n.equals("")) && !(p1.equals(""))) {
-
+            String nomText = nom.getText();
+            String prenomText = prenom.getText();
+            if (!nomText.equals("") && !prenomText.equals("") && f[0].isFile()) {
+                try {
+                    InitDataBase.addImageToDataBase(nomText, prenomText, f[0].toString());
+                    treeView[0] = new TreeView<String>(arborescence());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             } else {
                 Alert err = new Alert(AlertType.INFORMATION);
                 err.setTitle("Erreur");
@@ -91,7 +97,6 @@ public class Reconnaissance extends Application {
                 err.setContentText("Veuillez renseigner l'identité du visage");
                 err.showAndWait();
             }
-
         });
         Button retour = new Button("Retour à l'accueil");
         retour.setOnAction(e -> start(stage));
@@ -125,21 +130,9 @@ public class Reconnaissance extends Application {
         return(root);
     }
     public TreeItem arborescence(){
-        File[] dirApprentissage = (new File("img/Base_Images_Apprentissage")).listFiles();
-        File[] dirTest = (new File("img/Base_Images_Test")).listFiles();
-
-        TreeItem<String> root = new TreeItem<>("Image");
-        TreeItem<String> rootApprentissage = new TreeItem<>(new File("img/Base_Images_Apprentissage").getName());
-        TreeItem<String> rootTest = new TreeItem<>(new File("img/Base_Images_Test").getName());
-
-        rootApprentissage=arboR(rootApprentissage,dirApprentissage);
-        rootTest=arboR(rootTest,dirTest);
-
-        root.getChildren().addAll(
-                rootApprentissage,
-                rootTest
-        );
-
+        File[] dir = (new File("img/DataBaseImage")).listFiles();
+        TreeItem<String> root = new TreeItem<>("Images");
+        root = arboR(root, dir);
         return(root);
     }
 
@@ -218,6 +211,8 @@ public class Reconnaissance extends Application {
     }
 
     public static void main(String[] args) {
+        MySQL.getInstance().connexion();
         launch(args);
+        MySQL.getInstance().deconnexion();
     }
 }
