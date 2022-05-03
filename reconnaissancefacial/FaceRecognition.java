@@ -84,7 +84,5 @@ public class FaceRecognition {
             firstNameIdentified = name[0];
             lastNameIdentified = name[1];
         }
-
-        System.out.println("fini");
     }
 }
