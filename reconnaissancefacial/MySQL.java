@@ -49,7 +49,7 @@ public class MySQL {
 
                 String createTableEigenFaces = "CREATE TABLE IF NOT EXISTS EigenFaces (" +
                         "id INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "matrix BLOB not NULL);";
+                        "matrix LONGBLOB not NULL);";
                 preparedStatement.executeUpdate(createTableEigenFaces);
 
                 preparedStatement.close();
