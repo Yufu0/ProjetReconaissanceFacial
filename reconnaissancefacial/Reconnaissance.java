@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Reconnaissance extends Application {
     public void start(Stage stage) {
@@ -79,6 +80,8 @@ public class Reconnaissance extends Application {
         img.setFitHeight(700);
         img.setFitWidth(800);
 
+        TreeView<String> treeView = new TreeView<String>(arborescence());
+
         final File[] f = new File[1];
 
         Button select = new Button("Sélectionner une image");
@@ -96,7 +99,8 @@ public class Reconnaissance extends Application {
             if (!(nomText.equals("")) && !(prenomText.equals(""))) {
                 try {
                     InitDataBase.addImageToDataBase(nomText, prenomText, f[0].toString());
-                    //treeView[0] = new TreeView<String>(arborescence());
+                    ImageDatabaseComputation.compute();
+                    //treeView = new TreeView<String>(arborescence());
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -121,7 +125,7 @@ public class Reconnaissance extends Application {
         imgChoisie.getChildren().add(img);
         imgChoisie.getStyleClass().add("image-view");
 
-        TreeView<String> treeView = new TreeView<String>(arborescence());
+
 
         p.setCenter(imgChoisie);
         p.setRight(menu);
@@ -213,8 +217,8 @@ public class Reconnaissance extends Application {
                     img2.setImage(new Image(new File(faceRecognition.getClosestImage()).toURI().toString()));
                     nomRec.setText(faceRecognition.getLastNameIdentified());
                     prenomRec.setText(faceRecognition.getFirstNameIdentified());
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                } catch (IOException | SQLException | ClassNotFoundException exception) {
+                    exception.printStackTrace();
                 }
             }
         });
@@ -247,8 +251,8 @@ public class Reconnaissance extends Application {
     }
 
     public static void main(String[] args) {
-        MySQL.getInstance().connexion();
+        reconnaissancefacial.MySQL.getInstance().connexion();
         launch(args);
-        MySQL.getInstance().deconnexion();
+        reconnaissancefacial.MySQL.getInstance().deconnexion();
     }
 }

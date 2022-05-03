@@ -2,10 +2,10 @@ package reconnaissancefacial;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class InitDataBase {
-    public static void init() throws IOException {
-
+    public static void init() throws IOException, SQLException, ClassNotFoundException {
         String src = "img/Base_Images_Apprentissage";
         File file = new File(src);
 
@@ -20,11 +20,13 @@ public class InitDataBase {
                 addImageToDataBase(nom, prenom, src + "/" + str + "/"+image);
             }
         }
+
+        ImageDatabaseComputation.compute();
     }
 
 
     public static void addImageToDataBase(String nom, String prenom, String source) throws IOException {
-        MySQL mysql = MySQL.getInstance();
+        reconnaissancefacial.MySQL mysql = reconnaissancefacial.MySQL.getInstance();
 
         String dirImages = "img/DataBaseImage";
         File dirFileImages = new File(dirImages);

@@ -7,8 +7,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Matrix {
+public class Matrix implements Serializable {
     Vector[] data;
 
     public Matrix(Vector[] data) {
@@ -199,5 +200,15 @@ public class Matrix {
             }
         }
         ImageIO.write(image, "jpg", new File(name));
+    }
+
+    public double[][] toArray() {
+        double[][] array = new double[this.getWidth()][this.getHeight()];
+        for (int i = 0; i < this.getWidth(); i++) {
+            for (int j = 0; j < this.getHeight(); j++) {
+                array[i][j] = this.get(i,j);
+            }
+        }
+        return array;
     }
 }

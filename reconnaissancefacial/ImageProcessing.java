@@ -14,36 +14,36 @@ public class ImageProcessing {
     public ImageProcessing(String source, String type) throws IOException {
         BufferedImage img = ImageIO.read(new File(source));
 
-        if (type == "COULEUR") {
+        if (type.equals("COULEUR")) {
             int width = img.getWidth(null);
             int height = img.getHeight(null);
             // crée l'image de sortie
-            BufferedImage newImg = new BufferedImage(Main.WIDTH, Main.HEIGHT, BufferedImage.TYPE_INT_RGB);
+            BufferedImage newImg = new BufferedImage(Init.WIDTH, Init.HEIGHT, BufferedImage.TYPE_INT_RGB);
 
             // balancer l'image d'entrée à l'image de sortie
             Graphics2D g = newImg.createGraphics();
-            g.drawImage(img, 0, 0, Main.WIDTH, Main.HEIGHT, 0, 0, width, height,null);
+            g.drawImage(img, 0, 0, Init.WIDTH, Init.HEIGHT, 0, 0, width, height,null);
             g.dispose();
 
-            this.imageTableau = new int[Main.WIDTH][Main.HEIGHT];
+            this.imageTableau = new int[Init.WIDTH][Init.HEIGHT];
 
             Raster tramPixelsImg = newImg.getRaster();
 
             int[] rgb;
-            for (int i = 0; i < Main.WIDTH; i++) {
-                for (int j = 0; j < Main.HEIGHT; j++) {
+            for (int i = 0; i < Init.WIDTH; i++) {
+                for (int j = 0; j < Init.HEIGHT; j++) {
                     rgb = tramPixelsImg.getPixel(i, j, (int[]) null);
                     this.imageTableau[i][j] = (int) Math.floor(0.2126 * (double) rgb[0] + 0.7152 * (double) rgb[1] + 0.0722 * (double) rgb[2]);
                 }
             }
-        } else if (type == "N&B") {
-            this.imageTableau = new int[Main.WIDTH][Main.HEIGHT];
+        } else if (type.equals("N&B")) {
+            this.imageTableau = new int[Init.WIDTH][Init.HEIGHT];
 
             Raster tramPixelsImg = img.getRaster();
 
             int[] b;
-            for (int i = 0; i < Main.WIDTH; i++) {
-                for (int j = 0; j < Main.HEIGHT; j++) {
+            for (int i = 0; i < Init.WIDTH; i++) {
+                for (int j = 0; j < Init.HEIGHT; j++) {
                     b = tramPixelsImg.getPixel(i, j, (int[]) null);
                     this.imageTableau[i][j] = b[0];
                 }
@@ -53,11 +53,11 @@ public class ImageProcessing {
 
 
     public Matrix toMatrix(){
-        if (this.imageTableau.length == 0 || this.imageTableau[0].length == 0);
-        Matrix m = new Matrix(this.imageTableau.length, this.imageTableau[0].length);
+        if (this.imageTableau.length == 0 || this.imageTableau[0].length == 0) return null;
+            Matrix m = new Matrix(this.imageTableau.length, this.imageTableau[0].length);
         for (int i = 0; i < this.imageTableau.length; i++) {
             for (int j = 0; j < this.imageTableau[i].length; j++) {
-                m.set(i,j, (double) this.imageTableau[i][j]);
+                m.set(i,j, this.imageTableau[i][j]);
             }
         }
 

@@ -24,19 +24,9 @@ public class ImageDatabaseComputation {
 
 
         /* calcule de l'ACP sur cette matrice */
-        ACP acp = new ACP(matrixImages, 1);
+        ACP acp = new ACP(matrixImages, 3);
 
         /* stockage du visage moyen dans la bdd */
-        // mysql.saveFaceMean(acp.getVectorMean());
-
-        /* on projettent tous les vecteurs sur l'espace des eigenfaces */
-        HashMap<Integer, Vector> vectorsImagesProjected = new HashMap<>();
-        for (int idImage : images.keySet()) {
-            Vector vector = (new ImageProcessing(images.get(idImage), "N&B").toMatrix().toVector());
-            Vector vectorProjected = acp.getEigenMatrix().projectVector(vector);
-            vectorsImagesProjected.put(idImage, vectorProjected);
-        }
-
-
+        mysql.saveEigenFaces(acp.getEigenMatrix());
     }
 }
