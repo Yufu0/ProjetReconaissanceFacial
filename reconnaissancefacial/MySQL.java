@@ -200,6 +200,7 @@ public class MySQL {
 
     public void saveEigenFaces(Matrix matrix) {
         try {
+            connection.createStatement().executeUpdate("DELETE FROM EigenFaces;");
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO EigenFaces (matrix) VALUES (?)");
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
