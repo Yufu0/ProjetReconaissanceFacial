@@ -100,7 +100,7 @@ public class Reconnaissance extends Application {
                 try {
                     InitDataBase.addImageToDataBase(nomText, prenomText, f[0].toString());
                     ImageDatabaseComputation.compute();
-                    //treeView = new TreeView<String>(arborescence());
+                    treeView.setRoot(arborescence());
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
