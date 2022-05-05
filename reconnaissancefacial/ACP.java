@@ -17,7 +17,7 @@ public class ACP {
 
     public ACP(Matrix matrixImage, int nombreEigenFaces) {
         this.matrixVectorsImage = matrixImage;
-        this.eigenVectors = new HashMap<>();
+        this.eigenVectors = new LinkedHashMap<>();
         this.nombreEigenFaces = nombreEigenFaces;
         this.compute();
     }
