@@ -81,6 +81,11 @@ public class Reconnaissance extends Application {
         img.setFitWidth(800);
 
         TreeView<String> treeView = new TreeView<String>(arborescence());
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.getValue().endsWith(".png") || newValue.getValue().endsWith(".jpg")) {
+                img.setImage(new Image("./img/DataBaseImage/" + newValue.getParent().getValue() + "/" + newValue.getValue()));
+            }
+        });
 
         final File[] f = new File[1];
 
