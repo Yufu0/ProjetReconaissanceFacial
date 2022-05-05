@@ -25,8 +25,8 @@ public class FaceRecognition {
 
 
     public FaceRecognition(String imageSrc) throws IOException, SQLException, ClassNotFoundException {
-        /* ouverture de l'image et modification au format souhaité */
 
+        /* ouverture de l'image et modification au format souhaité */
         reconnaissancefacial.MySQL mysql = reconnaissancefacial.MySQL.getInstance();
         mysql.connexion();
 

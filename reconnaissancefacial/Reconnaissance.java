@@ -25,11 +25,23 @@ public class Reconnaissance extends Application {
     ImageView img;
 
     public void start(Stage stage) {
+
         stage.setTitle("Reconnaissance faciale");
         stage.setResizable(false);
         FlowPane p = new FlowPane();
 
-        p.setPrefSize(1000, 700);
+        p.setPrefSize(1300, 700);
+
+        Button init = new Button("Initialiser");
+        init.setPrefSize(300, 100);
+        init.setOnAction(e -> {
+            try {
+                new Init().initialiser();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        init.getStyleClass().add("button-choice");
 
         Button ajouterImg = new Button("Ajouter une image");
         ajouterImg.setPrefSize(300, 100);
@@ -41,6 +53,7 @@ public class Reconnaissance extends Application {
         tester.setOnAction(e -> stage.setScene(tester(stage)));
         tester.getStyleClass().add("button-choice");
 
+        p.getChildren().add(init);
         p.getChildren().add(ajouterImg);
         p.getChildren().add(tester);
         p.setHgap(100);
@@ -67,7 +80,7 @@ public class Reconnaissance extends Application {
         prenom.setPromptText("Prénom");
 
         BorderPane p = new BorderPane();
-        p.setPrefSize(1000, 700);
+        p.setPrefSize(1300, 700);
         p.setPadding(new Insets(10, 10, 10, 10));
         p.getStyleClass().add("body");
 
@@ -183,7 +196,7 @@ public class Reconnaissance extends Application {
 
 
         BorderPane p = new BorderPane();
-        p.setPrefSize(1000, 700);
+        p.setPrefSize(1300, 700);
         p.setPadding(new Insets(10, 10, 10, 10));
 
         FlowPane menu = new FlowPane(Orientation.VERTICAL);
@@ -193,22 +206,22 @@ public class Reconnaissance extends Application {
         menu.getStyleClass().add("menu");
 
         StackPane imgEntree = new StackPane();
-        imgEntree.setPrefWidth(400);
+        imgEntree.setPrefWidth(540);
         imgEntree.setMinWidth(300);
         imgEntree.getStyleClass().add("image-view");
 
         StackPane imgSortie = new StackPane();
-        imgSortie.setPrefWidth(400);
+        imgSortie.setPrefWidth(540);
         imgSortie.setMinWidth(300);
         imgSortie.getStyleClass().add("image-view");
 
         ImageView img1 = new ImageView();
-        img1.setFitHeight(300);
-        img1.setFitWidth(300);
+        img1.setFitHeight(500);
+        img1.setFitWidth(500);
 
         ImageView img2 = new ImageView();
-        img2.setFitHeight(300);
-        img2.setFitWidth(300);
+        img2.setFitHeight(500);
+        img2.setFitWidth(500);
 
         final File[] f = new File[1];
 
@@ -257,8 +270,8 @@ public class Reconnaissance extends Application {
     }
 
     public static void main(String[] args) {
-        reconnaissancefacial.MySQL.getInstance().connexion();
+        MySQL.getInstance().connexion();
         launch(args);
-        reconnaissancefacial.MySQL.getInstance().deconnexion();
+        MySQL.getInstance().deconnexion();
     }
 }

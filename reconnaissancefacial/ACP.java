@@ -32,9 +32,6 @@ public class ACP {
         return matrixVectorsImage;
     }
 
-    public Vector getVectorMean() {
-        return vectorMean;
-    }
     private void compute() {
 
         // calcule du vecteur moyen
