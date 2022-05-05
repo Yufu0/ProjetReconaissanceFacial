@@ -125,8 +125,6 @@ public class Reconnaissance extends Application {
         imgChoisie.getChildren().add(img);
         imgChoisie.getStyleClass().add("image-view");
 
-
-
         p.setCenter(imgChoisie);
         p.setRight(menu);
         p.setLeft(treeView);
@@ -157,6 +155,7 @@ public class Reconnaissance extends Application {
         File[] dir = (new File("img/DataBaseImage")).listFiles();
         TreeItem<String> root = new TreeItem<>("Images");
         root = arboR(root, dir);
+        root.setExpanded(true);
         return(root);
     }
 

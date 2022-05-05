@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class FaceRecognition {
-    private String firstNameIdentified = "?";
-    private String lastNameIdentified = "?";
+    private String firstNameIdentified = "inconnu";
+    private String lastNameIdentified = "inconnu";
 
 
     private String closestImage = "img/inconnu.png";

@@ -201,14 +201,4 @@ public class Matrix implements Serializable {
         }
         ImageIO.write(image, "jpg", new File(name));
     }
-
-    public double[][] toArray() {
-        double[][] array = new double[this.getWidth()][this.getHeight()];
-        for (int i = 0; i < this.getWidth(); i++) {
-            for (int j = 0; j < this.getHeight(); j++) {
-                array[i][j] = this.get(i,j);
-            }
-        }
-        return array;
-    }
 }

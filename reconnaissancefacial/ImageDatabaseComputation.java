@@ -24,7 +24,7 @@ public class ImageDatabaseComputation {
 
 
         /* calcule de l'ACP sur cette matrice */
-        ACP acp = new ACP(matrixImages, 5);
+        ACP acp = new ACP(matrixImages, Init.NUMBER_EIGENFACES);
 
         /* stockage du visage moyen dans la bdd */
         mysql.saveEigenFaces(acp.getEigenMatrix());

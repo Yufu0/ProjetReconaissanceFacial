@@ -49,7 +49,7 @@ public class MySQL {
 
                 String createTableEigenFaces = "CREATE TABLE IF NOT EXISTS EigenFaces (" +
                         "id INTEGER AUTO_INCREMENT PRIMARY KEY," +
-                        "matrix LONGBLOB not NULL);";
+                        "matrix BLOB not NULL);";
                 preparedStatement.executeUpdate(createTableEigenFaces);
 
                 preparedStatement.close();
@@ -64,13 +64,13 @@ public class MySQL {
         if (isOnline()) {
             try {
                 Statement preparedStatement = connection.createStatement();
-                String deleteTableImage = "DELETE FROM Image ;";
+                String deleteTableImage = "DELETE FROM Image";
                 preparedStatement.executeUpdate(deleteTableImage);
 
-                String deleteTablePersonne = "DELETE FROM Personne;";
+                String deleteTablePersonne = "DELETE FROM Personne";
                 preparedStatement.executeUpdate(deleteTablePersonne);
 
-                String deleteTableEigenFaces = "DELETE FROM EigenFaces;";
+                String deleteTableEigenFaces = "DELETE FROM EigenFaces";
                 preparedStatement.executeUpdate(deleteTableEigenFaces);
 
                 preparedStatement.close();

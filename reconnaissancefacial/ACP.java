@@ -3,6 +3,7 @@ package reconnaissancefacial;
 import org.apache.commons.math3.linear.EigenDecomposition;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.stream.Stream;
 
 public class ACP {
@@ -10,6 +11,7 @@ public class ACP {
     private Vector vectorMean;
     private final HashMap<Double, Vector> eigenVectors;
     private final int nombreEigenFaces;
+
 
     public HashMap<Double, Vector> getEigenVectors() {
         return eigenVectors;
@@ -54,8 +56,6 @@ public class ACP {
         // on garde les k permier vecteurs propre
         for (int i = 0; i < eigenDecomposition.getRealEigenvalues().length; i++) {
             double eigenvalue = eigenDecomposition.getRealEigenvalue(i);
-
-
             if (i < this.nombreEigenFaces) {
                 Vector eigenvector = this.matrixVectorsImage.multiply(new Vector(eigenDecomposition.getEigenvector(i).toArray()).toMatrix(1)).toVector();
                 eigenvector.normalise();
